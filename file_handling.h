@@ -1,2 +1,3 @@
 int checkIfFileHasExtension(char *fileName);
-void fileTypeChanger(char *fileName, char *extension);
+char *fileExtensionChanger(char *fileName, char *extension);
+int lenCharArray(char *string);

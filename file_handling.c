@@ -10,7 +10,7 @@ int checkIfFileHasExtension(char *fileName)
 
     cp = strchr(fileName, '.');
 
-    if(cp == NULL)
+    if(cp != NULL)
         return TRUE;
 
     return FALSE;
@@ -19,25 +19,30 @@ int checkIfFileHasExtension(char *fileName)
 /**
  * This program changes the extension of file to the desired extension type
 */
-void fileTypeChanger(char *fileName, char *extension)
+char *fileExtensionChanger(char *fileName, char *extension)
+{   
+    int lengthOfFileName = lenCharArray(fileName);
+    char *extendedFile = (char *)malloc(sizeof(char)*(lengthOfFileName + 3));
+    int i = 0;
+
+    while(i < lengthOfFileName)
+    {
+        *(fileName + i) = *(extendedFile + i); 
+        i++;
+    }
+    
+    return strcat(extendedFile, extension);
+}
+
+int lenCharArray(char *string)
 {
-    char *cp;
-
-    if(checkIfFileIsLegal(fileName))/*if the file name already has an extension*/
+    int count = 0;
+    int i = 0;
+    while(*(string + i) != '\0')
     {
-        cp = strchr(fileName, '.');
-    }
-    else
-    {
-        cp = strchr(fileName, '\0');        
+        count++;
+        i++;
     }
 
-    while(*extension != '\0')
-    {
-        *cp = *extension;
-        *++cp;
-        *++extension;    
-    }
-    *cp = '\0';
-    printf("%s", &fileName);
+    return count;
 }
