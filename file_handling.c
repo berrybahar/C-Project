@@ -27,7 +27,7 @@ char *fileExtensionChanger(char *fileName, char *extension)
 
     while(i < lengthOfFileName)
     {
-        *(fileName + i) = *(extendedFile + i); 
+        *(extendedFile + i) = *(fileName + i); 
         i++;
     }
     
@@ -43,6 +43,7 @@ int lenCharArray(char *string)
         count++;
         i++;
     }
+    count++;
 
     return count;
 }

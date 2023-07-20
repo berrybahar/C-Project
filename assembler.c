@@ -3,30 +3,25 @@
 int main(int argc, char *argv[])
 {   
     FILE *iofp;
-    char *orhan = "anan";
-    char *newFileName;
+    char *extendedFileName;
     
     if(argc == 1){
-        printf("No file entered!");
+        printf("No file entered!\n");
     }
     
     while(--argc > 0)
     {
         /**/
-        if((iofp = fopen(*argv, "r")) == NULL)
+        extendedFileName = fileExtensionChanger(*++argv, ".as");
+        if((iofp = fopen(extendedFileName, "r")) == NULL)
         {
-            printf("Cannot open file %s, continue with next file.\n", *argv);
+            printf("C %s, continue with next file.\n", *argv);
         }
         else
         {
-            
+                
         }
     }
-
-    *newFileName = fileExtensionChanger(orhan, ".as");
-
-    printf("Hello\n");
-    printf("%s\n", newFileName);
     
     return 0;
 }
