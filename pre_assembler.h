@@ -1,0 +1,1 @@
+#define MAX_ROW_LENGTH 80

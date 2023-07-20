@@ -15,11 +15,11 @@ int main(int argc, char *argv[])
         extendedFileName = fileExtensionChanger(*++argv, ".as");
         if((iofp = fopen(extendedFileName, "r")) == NULL)
         {
-            printf("C %s, continue with next file.\n", *argv);
+            printf("Cannot open file %s, continue with next file.\n", *argv);
         }
         else
         {
-                
+                    
         }
     }
     
