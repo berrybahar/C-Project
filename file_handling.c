@@ -21,7 +21,7 @@ int checkIfFileHasExtension(char *fileName)
 */
 char *fileExtensionChanger(char *fileName, char *extension)
 {   
-    int lengthOfFileName = lenCharArray(fileName);
+    int lengthOfFileName = strlen(fileName);
     char *extendedFile = (char *)malloc(sizeof(char)*(lengthOfFileName + 3));
     int i = 0;
 
@@ -32,18 +32,4 @@ char *fileExtensionChanger(char *fileName, char *extension)
     }
     
     return strcat(extendedFile, extension);
-}
-
-int lenCharArray(char *string)
-{
-    int count = 0;
-    int i = 0;
-    while(*(string + i) != '\0')
-    {
-        count++;
-        i++;
-    }
-    count++;
-
-    return count;
 }

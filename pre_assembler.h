@@ -1,3 +1,4 @@
 #include "assembler.h"
-#include "linked_list.h"
-#define MAX_ROW_LENGTH 80
+#define MAX_LINE_LENGTH 81
+
+void macroSpreading(FILE *iofp);

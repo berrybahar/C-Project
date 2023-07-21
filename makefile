@@ -1,4 +1,4 @@
-assembler: assembler.o file_handling.o pre-assembler.o
+assembler: assembler.o file_handling.o pre_assembler.o linked_list.o
 	       gcc -ansi -Wall -pedantic -g assembler.o file_handling.o -o assembler -lm
 
 assembler.o: assembler.c assembler.h

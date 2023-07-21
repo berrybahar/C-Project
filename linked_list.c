@@ -11,10 +11,11 @@ List* create_list()
     return new_list;
 }
  
-void add_to_list(List* list, void* data)
+void add_to_list(List* list, char* name, short *number)
 {
     Node* new_node = (Node*)malloc(sizeof(Node));
-    new_node->data = data;
+    new_node->name = name;
+    new_node->number = number;
     new_node->next = list->head;
     list->head = new_node;
     list->size++;
@@ -22,11 +23,12 @@ void add_to_list(List* list, void* data)
 
 void* remove_from_list(List* list) 
 {
+    Node* node_to_remove = list->head;
+    char* name = node_to_remove->name;
+    short* number = node_to_remove->number;
     if (list->size == 0) {
         return NULL;
     }
-    Node* node_to_remove = list->head;
-    void* data = node_to_remove->data;
     list->head = node_to_remove->next;
     free(node_to_remove);
     list->size--;
