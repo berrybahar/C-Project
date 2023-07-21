@@ -4,7 +4,8 @@ int main(int argc, char *argv[])
 {   
     FILE *iofp;
     char *extendedFileName;
-    List *opcodeList = createListOfOpcode();
+    /*List *opcodeList = createListOfOpcode();*/
+    /*int i = 0;*/
     
     if(argc == 1){
         printf("No file entered!\n");
@@ -20,7 +21,14 @@ int main(int argc, char *argv[])
         else
         {
             printf("success!\n");
-            /*Don't forget fclose!*/
+            /*Don't forget fclose!*/ 
+            /*while (i < 16) for testing if the list works
+            {
+                printf("%s", );
+                printf();
+                i++;
+            }*/
+            
         }
     }
     
@@ -38,24 +46,8 @@ List *createListOfOpcode()
     
     for(i = 0; i < 16; i++)
     {
-        add_to_list(opcodeList, opcode[i], decimalToFourBitBinary(opcode[i]));
+        add_to_list(opcodeList, opcode[i], i);
     }
     
     return opcodeList;
-}
-
-/**
- * 
-*/
-short *decimalToFourBitBinary(short num)
-{
-    int i = 0;
-    short binaryNum[4];
-    while(num > 0)
-    {
-        binaryNum[i] = num % 2;
-        num = num / 2; 
-        i++;
-    }
-    return binaryNum;
 }

@@ -1,6 +1,6 @@
 typedef struct node {
     char *name;
-    short *number;
+    short number;
     struct node* next;
 } Node;
  
@@ -10,6 +10,6 @@ typedef struct list {
 } List;
 
 List* create_list();
-void add_to_list(List* list, char *name, short*number);
-void* remove_from_list(List* list);
+void add_to_list(List* list, char *name, short number);
+void remove_from_list(List* list);
 void free_list(List* list);

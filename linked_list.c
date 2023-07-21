@@ -1,5 +1,4 @@
 #include "assembler.h"
-#include "linked_list.h"
 
 /*don't forget to free the memory after you use (free_list(int_list);)*/
 
@@ -11,7 +10,7 @@ List* create_list()
     return new_list;
 }
  
-void add_to_list(List* list, char* name, short *number)
+void add_to_list(List* list, char* name, short number)
 {
     Node* new_node = (Node*)malloc(sizeof(Node));
     new_node->name = name;
@@ -21,18 +20,15 @@ void add_to_list(List* list, char* name, short *number)
     list->size++;
 }
 
-void* remove_from_list(List* list) 
+void remove_from_list(List* list) 
 {
     Node* node_to_remove = list->head;
-    char* name = node_to_remove->name;
-    short* number = node_to_remove->number;
     if (list->size == 0) {
-        return NULL;
+        return ;
     }
     list->head = node_to_remove->next;
     free(node_to_remove);
     list->size--;
-    return data;
 }
  
 void free_list(List* list) 

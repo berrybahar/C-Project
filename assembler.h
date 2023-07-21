@@ -6,4 +6,3 @@
 #define TRUE  1
 #define FALSE  0
 List *createListOfOpcode();
-short *decimalToFourBitBinary(short num);
