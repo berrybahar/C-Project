@@ -11,7 +11,7 @@ pre_assembler.o: pre_assembler.c pre_assembler.h
 				 gcc -c -ansi -Wall -pedantic pre_assembler.c -o pre_assembler.o
 
 linked_list.o: linked_list.c linked_list.h
-				 gcc -c -ansi -Wall -pedantic linked_list.c -o linked_list.o
+			   gcc -c -ansi -Wall -pedantic linked_list.c -o linked_list.o
 
 opcodes.o: opcodes.c opcodes.h
-				 gcc -c -ansi -Wall -pedantic opcodes.c -o opcodes.o
+		   gcc -c -ansi -Wall -pedantic opcodes.c -o opcodes.o
