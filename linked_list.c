@@ -1,16 +1,4 @@
 #include "assembler.h"
-
-typedef struct node 
-{
-    void* data;
-    struct node* next;
-} Node;
- 
-typedef struct list 
-{
-    int size;
-    Node* head;
-} List;
  
 List* create_list() 
 {

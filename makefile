@@ -1,5 +1,5 @@
-assembler: assembler.o file_handling.o pre_assembler.o linked_list.o opcodes.o
-	       gcc -ansi -Wall -pedantic -g assembler.o file_handling.o pre_assembler.o linked_list.o opcods.o -o assembler -lm
+assembler: assembler.o file_handling.o pre_assembler.o linked_list.o opcodes.o instructions.o
+	       gcc -ansi -Wall -pedantic -g assembler.o file_handling.o pre_assembler.o linked_list.o opcodes.o instructions.o -o assembler -lm
 
 assembler.o: assembler.c assembler.h
 			 gcc -c -ansi -Wall -pedantic assembler.c -o assembler.o

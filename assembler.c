@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
         else
         {
             /*success!*/
-            fileAfterSpreadingMacros = macroSpreading(iofp);
+            fileAfterSpreadingMacros = macroSpreading(iofp, *argv);
         }
     }
     

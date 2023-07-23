@@ -1,9 +1,9 @@
 #include "assembler.h"
 
-FILE *macroSpreading(FILE *iofp)
+FILE *macroSpreading(FILE *iofp, char *fileName)
 {
     List* macro_list = create_list();
-    FILE *fileAfterSpreadingMacros = fopen(fileExtensionChanger(), ".am");
+    FILE *fileAfterSpreadingMacros = fopen(fileExtensionChanger(fileName, ".am"), "w");
     char *line_in_file;
     int hasMacro = FALSE;
     

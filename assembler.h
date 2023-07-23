@@ -6,5 +6,5 @@
 #include "opcodes.h"
 #include "linked_list.h"
 #include "instructions.h"
-#define TRUE  1
-#define FALSE  0
+#define TRUE 1
+#define FALSE 0
