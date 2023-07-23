@@ -20,14 +20,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            printf("success!\n");
-            /*Don't forget fclose!*/ 
-            /*while (i < 16) for testing if the list works
-            {
-                printf("%s", );
-                printf();
-                i++;
-            }*/
+            /*success!*/
             
         }
     }

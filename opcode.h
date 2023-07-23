@@ -1,5 +1,3 @@
-#include "assembler.h"
-
 /*with help from the page 224-225 at the Study Guide(aka: Madrich Lemida)*/
 void mov(FILE *iofp);
 void cmp(FILE *iofp);
