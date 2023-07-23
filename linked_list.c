@@ -1,10 +1,13 @@
 #include "assembler.h"
-typedef struct node {
+
+typedef struct node 
+{
     void* data;
     struct node* next;
 } Node;
  
-typedef struct list {
+typedef struct list 
+{
     int size;
     Node* head;
 } List;

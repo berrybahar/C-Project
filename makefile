@@ -15,3 +15,6 @@ linked_list.o: linked_list.c linked_list.h
 
 opcodes.o: opcodes.c opcodes.h
 		   gcc -c -ansi -Wall -pedantic opcodes.c -o opcodes.o
+
+instructions.o: instructions.c instructions.h
+		   gcc -c -ansi -Wall -pedantic instructions.c -o instructions.o
