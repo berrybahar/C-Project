@@ -11,6 +11,7 @@ FILE *macroSpreading(FILE *iofp)
     {
        fread(line_in_file, MAX_LINE_LENGTH, 1, iofp);
        printf("%s\n", line_in_file);
+       break;
     }
     
     return fileAfterSpreadingMacros;
