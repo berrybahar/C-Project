@@ -20,7 +20,7 @@ struct
 {
     char *opcode;
     void (*func)(FILE *iofp);
-} cmd [] = 
+} opcodes [] = 
 {
     {"mov", mov},
     {"cmp", cmp},

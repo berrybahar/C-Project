@@ -1,10 +1,17 @@
-#include "pre_assembler.h"
+#include "assembler.h"
 
-void macroSpreading(FILE *iofp)
+FILE *macroSpreading(FILE *iofp)
 {
-
-    char line[MAX_LINE_LENGTH];
+    List* macro_list = create_list();
+    FILE *fileAfterSpreadingMacros
+    char line_in_file[MAX_LINE_LENGTH];
     int hasMacro = FALSE;
     
-    fread(line, MAX_LINE_LENGTH, 1, iofp);
+    while (!feof(iofp)) 
+    {
+       fread(line_in_file, MAX_LINE_LENGTH, 1, iofp);
+        
+    }
+    
+    return fileAfterSpreadingMacros;
 }

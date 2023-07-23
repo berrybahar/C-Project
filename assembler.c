@@ -4,8 +4,7 @@ int main(int argc, char *argv[])
 {   
     FILE *iofp;
     char *extendedFileName;
-    /*List *opcodeList = createListOfOpcode();*/
-    /*int i = 0;*/
+    FILE *fileAfterSpreadingMacros;
     
     if(argc == 1){
         printf("No file entered!\n");
@@ -21,7 +20,7 @@ int main(int argc, char *argv[])
         else
         {
             /*success!*/
-            
+            fileAfterMacroSpreadingMacros = macroSpreading(iofp);
         }
     }
     

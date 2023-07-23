@@ -4,6 +4,8 @@
         "*.tcc": "c",
         "random": "c",
         "limits": "c",
-        "functional": "c"
+        "functional": "c",
+        "pre_assembler.h": "c",
+        "assembler.h": "c"
     }
 }
