@@ -34,20 +34,3 @@ int main(int argc, char *argv[])
     
     return 0;
 }
-
-/**
- * 
-*/
-List *createListOfOpcode()
-{   
-    int i;
-    char *opcode[] = {"mov", "cmp", "add", "sub", "not", "clr", "lea", "inc", "dec", "jmp", "bne", "red", "prn", "jsr", "rts", "stop"};
-    List *opcodeList = create_list();
-    
-    for(i = 0; i < 16; i++)
-    {
-        add_to_list(opcodeList, opcode[i], i);
-    }
-    
-    return opcodeList;
-}
