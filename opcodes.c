@@ -1,4 +1,4 @@
-#include "assembler.h"
+#include "opcodes.h"
 
 void mov(FILE *iofp)
 {
