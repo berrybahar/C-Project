@@ -4,7 +4,7 @@ FILE *macroSpreading(FILE *iofp, char *fileName)
 {
     List* macro_list = create_list();
     FILE *fileAfterSpreadingMacros = fopen(fileExtensionChanger(fileName, ".am"), "w");
-    char *line_in_file;
+    char line_in_file[MAX_LINE_LENGTH];
     int hasMacro = FALSE;
     
     while (!feof(iofp)) 

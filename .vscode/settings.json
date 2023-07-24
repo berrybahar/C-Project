@@ -7,7 +7,9 @@
     "functional": "c",
     "pre_assembler.h": "c",
     "assembler.h": "c",
-    "file_handling.h": "c"
+    "file_handling.h": "c",
+    "string.h": "c",
+    "instructions.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

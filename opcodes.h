@@ -15,3 +15,9 @@ void prn(FILE *iofp);
 void jsr(FILE *iofp);
 void rts(FILE *iofp);
 void stop(FILE *iofp);
+
+typedef struct opcodes
+{
+    char *opcode;
+    void (*func)(FILE *iofp);
+} opcodes;
