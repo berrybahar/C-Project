@@ -17,4 +17,4 @@ opcodes.o: opcodes.c opcodes.h
 		   gcc -c -ansi -Wall -pedantic opcodes.c -o opcodes.o
 
 instructions.o: instructions.c instructions.h
-		   gcc -c -ansi -Wall -pedantic instructions.c -o instructions.o
+		   		gcc -c -ansi -Wall -pedantic instructions.c -o instructions.o
