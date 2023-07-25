@@ -7,7 +7,7 @@ int checkIfFileHasExtension(char *fileName)
 {
     char *cp;
 
-    cp = strchr(fileName, '.');
+    cp = strchr(fileName, ' ');
 
     if(cp != NULL)
         return TRUE;

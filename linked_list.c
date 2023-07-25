@@ -7,23 +7,32 @@ List* create_list()
     new_list->head = NULL;
     return new_list;
 }
- 
-void add_to_list(List* list, void* data) 
+
+ /*returns true if the node is added*/
+int add_to_list(List* list, char* name, void* data) 
 {
     Node* new_node = (Node*)malloc(sizeof(Node));
-    new_node->data = data;
-    new_node->next = list->head;
-    list->head = new_node;
-    list->size++;
+    if(is_node_in_list(list, name) == FALSE)
+    {
+        new_node->name = name;
+        new_node->data = data;
+        new_node->next = list->head;
+        list->head = new_node;
+        list->size++;
+        return TRUE;
+    }
+    return FALSE;
 }
  
 void* remove_from_list(List* list) 
 {
+    Node* node_to_remove;
+    void* data;
     if (list->size == 0) {
         return NULL;
     }
-    Node* node_to_remove = list->head;
-    void* data = node_to_remove->data;
+    node_to_remove = list->head;
+    data = node_to_remove->data;
     list->head = node_to_remove->next;
     free(node_to_remove);
     list->size--;
@@ -39,4 +48,22 @@ void free_list(List* list)
         current_node = next_node;
     }
     free(list);
+}
+
+int is_node_in_list(List* list, char *name)
+{
+    Node* temp;
+    if (list->size == 0) 
+    {
+        return FALSE;
+    }
+    temp = list->head;
+    while(temp != NULL)
+    {
+        if(temp->data == name)
+            return TRUE;
+        temp = temp->next;
+    }
+    
+    return FALSE;
 }
