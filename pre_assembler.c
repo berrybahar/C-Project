@@ -1,12 +1,13 @@
 #include "assembler.h"
 
-FILE *macroSpreading(FILE *iofp, char *fileName, List* macro_list, int isThereProblematicMacro)
+FILE *macroSpreading(FILE *iofp, char *fileName, List* macro_list, opcodes opcode[], instructions instruction[])
 {
     FILE *fileAfterSpreadingMacros = fopen(fileExtensionChanger(fileName, ".am"), "w");
     char line_in_file[MAX_LINE_LENGTH];
     char *macro;
     char *macro_info;
     int hasMacro = FALSE;
+    int isThereProblematicMacro = FALSE; /*macro name can't be name of opcode or name of instruction*/
     
     while (!feof(iofp)) 
     {
@@ -17,8 +18,9 @@ FILE *macroSpreading(FILE *iofp, char *fileName, List* macro_list, int isTherePr
          hasMacro = TRUE;
          while(*macro != ' ')
             *++macro;
-         
-         while(hasMacro == TRUE){
+
+         while(hasMacro == TRUE)/*for adding the macro's definition*/
+         {
             
          }
 
@@ -31,3 +33,4 @@ FILE *macroSpreading(FILE *iofp, char *fileName, List* macro_list, int isTherePr
     
     return fileAfterSpreadingMacros;
 }
+
