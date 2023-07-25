@@ -1,6 +1,4 @@
 #include "assembler.h"
-FILE *macroSpreading(FILE *iofp, char *fileName, List* macro_list, int isThereProblematicMacro, opcodes opcode[], instructions instruction[]);
-int isMacroLegal(opcodes opcode[], instructions instruction[], char *macro);
 
 FILE *macroSpreading(FILE *iofp, char *fileName, List* macro_list, int isThereProblematicMacro, opcodes opcode[], instructions instruction[])
 {
@@ -17,15 +15,13 @@ FILE *macroSpreading(FILE *iofp, char *fileName, List* macro_list, int isTherePr
          if((macro = strstr(line_in_file, "mcro")) != NULL) /*if there is macro*/
          {
             hasMacro = TRUE;
-            while(*macro == ' ')
-            {
-               *++macro;
-            }
+            /*you need to find the name of the macro!!!!*/
+            /*this is the function for finding the macro name (I need to write it)*/
 
             isThereProblematicMacro = isMacroLegal(opcode, instruction,macro);
             if(isThereProblematicMacro == TRUE)
             {
-               printf("The macro name %s is not legal! continuing to the next file!", macro);
+               printf("The macro name %s is not legal! continuing to the next file!\n", macro);
                break;
             }
 
@@ -50,7 +46,7 @@ FILE *macroSpreading(FILE *iofp, char *fileName, List* macro_list, int isTherePr
 
             if(add_to_list(macro_list, macro, macro_info) == FALSE)/*if the macro name does exist in the macro list*/
             {
-               printf("The macro name %s is not legal! continuing to the next file!", macro);
+               printf("The macro name %s can not be added to the list! continuing to the next file!", macro);
                break;
             }
        }else

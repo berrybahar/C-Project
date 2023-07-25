@@ -54,9 +54,13 @@ int main(int argc, char *argv[])
         else
         {
             /*success!*/
-            
+            fileAfterSpreadingMacros = macroSpreading(iofp, *argv, macro_list, isThereProblematicMacro, opcode, instruction);
+            if(isThereProblematicMacro == TRUE)/*if is there an illegal macro definition in the file*/
+            {
+                
+            }
         }
     }
     
-    return 0;
+    return 1;
 }
