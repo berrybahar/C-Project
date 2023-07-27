@@ -5,8 +5,7 @@ int main(int argc, char *argv[])
     FILE *iofp;
     char *extendedFileName;
     FILE *fileAfterSpreadingMacros;
-    List* macro_list = create_list();
-    int isThereProblematicMacro = FALSE; /*macro name can't be name of opcode or name of instruction*/
+    int isMacroLegal = FALSE; /*macro name can't be name of opcode or name of instruction*/
     
     /***********************************************************************************************************************/
     opcodes opcode[] = 
@@ -54,8 +53,8 @@ int main(int argc, char *argv[])
         else
         {
             /*success!*/
-            fileAfterSpreadingMacros = macroSpreading(iofp, *argv, macro_list, isThereProblematicMacro, opcode, instruction);
-            if(isThereProblematicMacro == TRUE)/*if is there an illegal macro definition in the file*/
+            fileAfterSpreadingMacros = macroSpreading(iofp, *argv, macro_list, isMacroLegal , opcode, instruction);
+            if(isMacroLegal == TRUE)/*if is there an illegal macro definition in the file*/
             {
                 
             }
