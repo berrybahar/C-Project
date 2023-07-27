@@ -18,6 +18,7 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
          hasMacro = TRUE;
          macro = strchr(macro, ' ');/*going to the end of the word macro*/
          while(*++macro == ' ');/*for getting the macro name*/
+         
 
          isMacroLegal = legalMacro(opcode, instruction, macro);
          if(isMacroLegal == FALSE)
@@ -50,6 +51,7 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
             printf("The macro name %s can not be added to the list! continuing to the next file!", macro);
             break;
          }
+         free(macro_info);
       }else
       {
          fprintf(fileAfterSpreadingMacros, "%s", line_in_file);

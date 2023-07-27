@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
         else
         {
             /*success!*/
-            fileAfterSpreadingMacros = macroSpreading(iofp, *argv, macro_list, isMacroLegal , opcode, instruction);
+            fileAfterSpreadingMacros = macroSpreading(iofp, *argv, isMacroLegal , opcode, instruction);
             if(isMacroLegal == TRUE)/*if is there an illegal macro definition in the file*/
             {
                 
