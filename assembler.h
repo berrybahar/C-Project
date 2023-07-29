@@ -6,4 +6,4 @@
 #include "pre_assembler.h"
 #define TRUE 1
 #define FALSE 0
-#define MAX_LINE_LENGTH 81 /*with \n */
+#define MAX_LINE_LENGTH 82 /*with \0 and \n */

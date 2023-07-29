@@ -1,24 +1,36 @@
 #include "assembler.h"
+/*macro name can not be a register name also don't forget to check it*/
 
 FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcode[], instructions instruction[])
 {
    FILE *fileAfterSpreadingMacros = fopen(fileExtensionChanger(fileName, ".am"), "w");
    char line_in_file[MAX_LINE_LENGTH];
    List* macro_list = create_list();
-   char *macro;/*macro's name*/
+   char macro[MAX_LINE_LENGTH];/*macro's name*/
+   char *macro_temp;/*temp for macro's name*/
    char *macro_info;/*the macro's content*/
    int hasMacro = FALSE;
+   int i = 0;
     
-   while (!feof(iofp)) 
+   while (!feof(iofp))
    {
       fgets(line_in_file, MAX_LINE_LENGTH, iofp);/*this works perfect*/
        
-      if((macro = strstr(line_in_file, "mcro")) != NULL) /*if there is macro*/
+      if((macro_temp = strstr(line_in_file, "mcro")) != NULL) /*if there is macro*/
       {
          hasMacro = TRUE;
-         macro = strchr(macro, ' ');/*going to the end of the word macro*/
-         while(*++macro == ' ');/*for getting the macro name*/
-         
+         macro_temp = strchr(macro_temp, ' ');/*going to the end of the word macro*/
+         while(*++macro_temp == ' ');/*for getting the macro name*/
+         /*Copy characters until space or end of string is reached*/
+         while (*macro_temp && *macro_temp != ' ') 
+         {
+            macro[i] = *macro_temp;
+            macro_temp++;
+            i++;
+         }
+         macro[strcspn(macro, "\r\n")] = '\0'; /* Remove trailing newline or carriage return */
+         i = 0;
+         printf("The macro name %s.\n", macro);
 
          isMacroLegal = legalMacro(opcode, instruction, macro);
          if(isMacroLegal == FALSE)
