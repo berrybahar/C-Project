@@ -1,5 +1,6 @@
 #include "assembler.h"
 /*macro name can not be a register name also don't forget to check it*/
+/*after that you can check if there is a call to any macro before it's declaration*/
 
 FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcode[], instructions instruction[])
 {
@@ -52,7 +53,8 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
 
             strncpy(macro_info,line_in_file, MAX_LINE_LENGTH);/*copy the line to the macro's content*/
                
-            if(strstr(line_in_file, "endmcro") != NULL){
+            if(strstr(line_in_file, "endmcro") != NULL)
+            {
                hasMacro = FALSE;
                printf("macro info is: %s", macro_info);
             }
@@ -66,6 +68,7 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
          free(macro_info);
       }else
       {
+         /*for checking if there is a macro name*/
          fprintf(fileAfterSpreadingMacros, "%s", line_in_file);
       }
    }
