@@ -60,7 +60,7 @@ int is_node_in_list(List* list, char *name)
     temp = list->head;
     while(temp != NULL)
     {
-        if(temp->data == name)
+        if(strstr(temp->data, name) != NULL)
             return TRUE;
         temp = temp->next;
     }

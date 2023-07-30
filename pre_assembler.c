@@ -16,7 +16,9 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
    while (!feof(iofp))
    {
       fgets(line_in_file, MAX_LINE_LENGTH, iofp);/*this works perfect*/
-       
+      printf("%s", line_in_file);
+      break;
+
       if((macro_temp = strstr(line_in_file, "mcro")) != NULL) /*if there is macro*/
       {
          hasMacro = TRUE;
@@ -30,6 +32,8 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
             i++;
          }
          macro[strcspn(macro, "\r\n")] = '\0'; /* Remove trailing newline or carriage return */
+         /*you need to check if there are characters after the macro name*/
+         /*if(*++macro_temp != )*/
          i = 0;
          printf("The macro name %s.\n", macro);
 
@@ -37,7 +41,6 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
          if(isMacroLegal == FALSE)
          {
             printf("The macro name %s is not legal! continuing to the next file!\n", macro);
-            break;
          }
 
          while(hasMacro == TRUE)/*for adding the macro's definition*/
@@ -68,8 +71,15 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
          free(macro_info);
       }else
       {
-         /*for checking if there is a macro name*/
-         fprintf(fileAfterSpreadingMacros, "%s", line_in_file);
+         /*for checking if there is a macro name
+         if()if there is a macro name in the file
+         {
+
+         }
+         else
+         {
+            fprintf(fileAfterSpreadingMacros, "%s", line_in_file);
+         }*/
       }
    }
    free_list(macro_list);
