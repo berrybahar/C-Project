@@ -1,108 +1,87 @@
 #include "assembler.h"
 /*macro name can not be a register name also don't forget to check it*/
-/*after that you can check if there is a call to any macro before it's declaration*/
 
 FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcode[], instructions instruction[])
 {
    FILE *fileAfterSpreadingMacros = fopen(fileExtensionChanger(fileName, ".am"), "w");
-   char *line_in_file;
-   char *clear_array = "";
+   int fileSize = getFileSize(iofp);
+   char *line_in_file = (char *)(malloc(sizeof(char *) * fileSize));
    List* macro_list = create_list();
-   char macro[MAX_LINE_LENGTH];/*macro's name*/
+   char *macro = (char *)(malloc(sizeof(char *) * fileSize));/*macro's name*/
    char *macro_temp;/*temp for macro's name*/
    char *macro_info;/*the macro's content*/
-   int lineLength = 0;
    int hasMacro = FALSE;
-   int i = 0;
     
-   while(!feof(iofp))
-   {/*maybe there is a need to checck if the line sent is in size 80 ask in the forums about this*/
-      line_in_file = (char *)(malloc(sizeof(char)));
-      if(line_in_file == NULL)
-      {
-         printf("memory allocation failed, continuing to the next file...");
-         break;
-      }
-      lineLength = getLineInFile(iofp, line_in_file);
+   while (!feof(iofp))
+   {
+      fgets(line_in_file, fileSize, iofp);
 
       if((macro_temp = strstr(line_in_file, "mcro")) != NULL) /*if there is macro*/
       {
          hasMacro = TRUE;
-         macro_temp = strchr(macro_temp, ' ');/*going to the end of the word macro*/
-         while(*++macro_temp == ' ');/*for getting the macro name*/
-         /*Copy characters until space or end of string is reached*/
-         while (*macro_temp && *macro_temp != ' ') 
-         {
-            macro[i] = *macro_temp;
-            macro_temp++;
-            i++;
-         }
-         macro[strcspn(macro, "\r\n")] = '\0'; /* Remove trailing newline or carriage return */
+         macro = getMacroName(macro_temp, macro);
          /*you need to check if there are characters after the macro name*/
 
-         i = 0;
          printf("The macro name %s.\n", macro);
 
-         isMacroLegal = islegalMacro(opcode, instruction, macro);
+         isMacroLegal = islegalMacro(opcode, instruction, line_in_file, macro, macro_temp);
          if(isMacroLegal == FALSE)
          {
             printf("The macro name %s is not legal! continuing to the next file!\n", macro);
          }
 
+         macro_info = (char *)malloc(fileSize);
          while(hasMacro == TRUE)/*for adding the macro's definition*/
          {
-            fgets(line_in_file, MAX_LINE_LENGTH, iofp);/*get to the next line*/
+            fgets(line_in_file, fileSize, iofp);/*get to the next line*/
 
-            macro_info = (char *)malloc(MAX_LINE_LENGTH);
+            macro_info = (char *)malloc(fileSize);
             if(macro_info == NULL)
             {
-               printf("memory allocation failed, continuing to the next file...");
+               printf("memory allocation failed, continuing to the next file...\n");
                break;
             } 
 
-            strncpy(macro_info,line_in_file, MAX_LINE_LENGTH);/*copy the line to the macro's content*/
+            strncpy(macro_info,line_in_file, fileSize);/*copy the line to the macro's content*/
                
             if(strstr(line_in_file, "endmcro") != NULL)
             {
                hasMacro = FALSE;
-               printf("macro info is: %s", macro_info);
+               printf("macro info is: %s\n", macro_info);
             }
          }
+         free(macro_info);/*free the macro info*/
 
          if(add_to_list(macro_list, macro, macro_info) == FALSE)/*if the macro name does exist in the macro list*/
          {
-            printf("The macro name %s can not be added to the list! continuing to the next file!", macro);
-            break;
+            printf("The macro name %s can not be added to the list! continuing to the next file!\n", macro);
          }
-         strcpy(macro_info, clear_array);
-         free(macro_info);
-
       }else
       {
          /*for checking if there is a macro name*/
-         if(0)/*if there is a macro name in the file*/
+         /*if()if there is a macro name in the file
          {
 
          }
          else
          {
             fprintf(fileAfterSpreadingMacros, "%s", line_in_file);
-         }
-         strcpy(macro, clear_array);
-         free(line_in_file);
+         }*/
+         fprintf(fileAfterSpreadingMacros, "%s", line_in_file);
       }
    }
-   /*free_list(macro_list);*/
+   free_list(macro_list);
     
    return fileAfterSpreadingMacros;
 }
 
 /**
- * chekcs if the macro is legal
+ * checks and returns true if the macro name is legal
 */
-int islegalMacro(opcodes opcode[], instructions instruction[], char *macro)
+int islegalMacro(opcodes opcode[], instructions instruction[], char *line_in_file, char *macro, char *macro_temp)
 {
    int i;
+   /*you need to get to after the macro name for macro temp tgo check if there are more characters after macro name*/
 
    for(i = 0; i < 16; i++)
    {
@@ -116,27 +95,48 @@ int islegalMacro(opcodes opcode[], instructions instruction[], char *macro)
       }
       
       if(strstr(macro, opcode[i].opcode) != NULL)
-         {
-            printf("Illegal Macro Name!");
-            return FALSE;/*macro is illegal*/
-         }
+      {
+         printf("Illegal Macro Name!");
+         return FALSE;/*macro is illegal*/
+      }
+   }
+   
+   while(*macro_temp != '\n' && *macro_temp != '\0')
+   {
+      if(*macro_temp != '\t' || *macro_temp != ' ' || *macro_temp != '\n')
+         return FALSE; /*macro is illegal*/
+      macro_temp++;
    }
    return TRUE;
 }
+
 /**
- * gets a line in file and then returns the length of it
+ * returns the size of the file
 */
-int getLineInFile(FILE *iofp, char *line_in_file)
+int getFileSize(FILE *iofp)
 {
-   int counter = 0;
+   int size; 
+   fseek(iofp, 0, SEEK_END); /* seek to end of file*/
+   size = ftell(iofp); /* get current file pointer (this is the size of the file)*/
+   fseek(iofp, 0, SEEK_SET); /* seek back to beginning of file*/
+   return size;
+}
+
+/**
+ * returns macro name
+*/
+char *getMacroName(char *macro_temp, char *macro)
+{
    int i = 0;
-   char character = ' ';
-   while((character = fgetc(iofp)) != '\n')
+   macro_temp = strchr(macro_temp, ' ');/*going to the end of the word macro*/
+   while(*++macro_temp == ' ');/*for getting the macro name*/
+   /*Copy characters until space or end of string is reached*/
+   while (*macro_temp && *macro_temp != ' ') 
    {
-      *(line_in_file + i) = character;
+      macro[i] = *macro_temp;
+      macro_temp++;
       i++;
-      counter++;
-      line_in_file = (char *)realloc(line_in_file, sizeof(char *) * i);
    }
-   return counter;
+   macro[strcspn(macro, "\r\n")] = '\0'; /* Remove trailing newline or carriage return */
+   return macro;
 }
