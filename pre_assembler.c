@@ -5,19 +5,25 @@
 FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcode[], instructions instruction[])
 {
    FILE *fileAfterSpreadingMacros = fopen(fileExtensionChanger(fileName, ".am"), "w");
-   char line_in_file[MAX_LINE_LENGTH];
+   char *line_in_file;
+   char *clear_array = "";
    List* macro_list = create_list();
    char macro[MAX_LINE_LENGTH];/*macro's name*/
    char *macro_temp;/*temp for macro's name*/
    char *macro_info;/*the macro's content*/
+   int lineLength = 0;
    int hasMacro = FALSE;
    int i = 0;
     
-   while (!feof(iofp))
-   {
-      fgets(line_in_file, MAX_LINE_LENGTH, iofp);/*this works perfect*/
-      printf("%s", line_in_file);
-      break;
+   while(!feof(iofp))
+   {/*maybe there is a need to checck if the line sent is in size 80 ask in the forums about this*/
+      line_in_file = (char *)(malloc(sizeof(char)));
+      if(line_in_file == NULL)
+      {
+         printf("memory allocation failed, continuing to the next file...");
+         break;
+      }
+      lineLength = getLineInFile(iofp, line_in_file);
 
       if((macro_temp = strstr(line_in_file, "mcro")) != NULL) /*if there is macro*/
       {
@@ -33,11 +39,11 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
          }
          macro[strcspn(macro, "\r\n")] = '\0'; /* Remove trailing newline or carriage return */
          /*you need to check if there are characters after the macro name*/
-         /*if(*++macro_temp != )*/
+
          i = 0;
          printf("The macro name %s.\n", macro);
 
-         isMacroLegal = legalMacro(opcode, instruction, macro);
+         isMacroLegal = islegalMacro(opcode, instruction, macro);
          if(isMacroLegal == FALSE)
          {
             printf("The macro name %s is not legal! continuing to the next file!\n", macro);
@@ -68,26 +74,33 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
             printf("The macro name %s can not be added to the list! continuing to the next file!", macro);
             break;
          }
+         strcpy(macro_info, clear_array);
          free(macro_info);
+
       }else
       {
-         /*for checking if there is a macro name
-         if()if there is a macro name in the file
+         /*for checking if there is a macro name*/
+         if(0)/*if there is a macro name in the file*/
          {
 
          }
          else
          {
             fprintf(fileAfterSpreadingMacros, "%s", line_in_file);
-         }*/
+         }
+         strcpy(macro, clear_array);
+         free(line_in_file);
       }
    }
-   free_list(macro_list);
+   /*free_list(macro_list);*/
     
    return fileAfterSpreadingMacros;
 }
 
-int legalMacro(opcodes opcode[], instructions instruction[], char *macro)
+/**
+ * chekcs if the macro is legal
+*/
+int islegalMacro(opcodes opcode[], instructions instruction[], char *macro)
 {
    int i;
 
@@ -109,4 +122,21 @@ int legalMacro(opcodes opcode[], instructions instruction[], char *macro)
          }
    }
    return TRUE;
+}
+/**
+ * gets a line in file and then returns the length of it
+*/
+int getLineInFile(FILE *iofp, char *line_in_file)
+{
+   int counter = 0;
+   int i = 0;
+   char character = ' ';
+   while((character = fgetc(iofp)) != '\n')
+   {
+      *(line_in_file + i) = character;
+      i++;
+      counter++;
+      line_in_file = (char *)realloc(line_in_file, sizeof(char *) * i);
+   }
+   return counter;
 }
