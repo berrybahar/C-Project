@@ -37,6 +37,8 @@ int main(int argc, char *argv[])
         {".extern", ext}, /*extern is a key word of c++ be aware of this*/
         {"not_valid", NULL}
     };
+
+    char registers[8][3]  = {"@r0", "@r1", "@r2", "@r3", "@r4", "@r5", "@r6", "@r7"};
 /*******************************************************************************************************************************/    
 
     if(argc == 1){
@@ -53,7 +55,7 @@ int main(int argc, char *argv[])
         else
         {
             /*success!*/
-            fileAfterSpreadingMacros = macroSpreading(iofp, *argv, isMacroLegal , opcode, instruction);
+            fileAfterSpreadingMacros = macroSpreading(iofp, *argv, isMacroLegal , opcode, instruction, registers);
             if(isMacroLegal == TRUE)/*if is there an illegal macro definition in the file*/
             {
                 

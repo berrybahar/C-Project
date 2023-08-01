@@ -8,11 +8,11 @@ List* create_list()
     return new_list;
 }
 
- /*returns true if the node is added*/
+/*returns true if the node is added*/
 int add_to_list(List* list, char* name, void* data) 
 {
     Node* new_node = (Node*)malloc(sizeof(Node));
-    if(is_node_in_list(list, new_node, name, ADD_TO_LIST) == FALSE)
+    if(is_node_in_list(list, name, ADD_TO_LIST) == FALSE)
     {
         new_node->name = name;
         new_node->data = data;
@@ -53,8 +53,9 @@ void free_list(List* list)
 /**
  * 
 */
-int is_node_in_list(List* list, Node *temp, char *name, int type)
+int is_node_in_list(List* list, char *name, int type)
 {
+    Node *temp;
     if (list->size == 0) 
     {
         return FALSE;
@@ -64,14 +65,17 @@ int is_node_in_list(List* list, Node *temp, char *name, int type)
     {
         if(type == ADD_TO_LIST)
         {
+
             if(strstr(temp->name, name) != NULL)
-            return TRUE;
+                return TRUE;
         }
-        else if(type == IS_THERE_MACRO)
+        
+        if(type == IS_THERE_MACRO)
         {
             if(strstr(name, temp->name) != NULL)
-            return TRUE;
+                return TRUE;
         }
+
         temp = temp->next;
     }
     

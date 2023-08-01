@@ -1,10 +1,10 @@
 #include "assembler.h"
 /*macro name can not be a register name also don't forget to check it*/
 
-FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcode[], instructions instruction[])
+FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcode[], instructions instruction[], char registers[8][3])
 {
    FILE *fileAfterSpreadingMacros = fopen(fileExtensionChanger(fileName, ".am"), "w");
-   Node *tempNode = (Node*)malloc(sizeof(Node));
+   Node *temp = (Node*)malloc(sizeof(Node));/*node temp*/
    long fileSize = getFileSize(iofp);
    char *line_in_file = (char *)(malloc(sizeof(char *) * fileSize));
    List* macro_list = create_list();
@@ -13,7 +13,7 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
    char *macro_temp = (char *)(malloc(sizeof(char *) * fileSize));/*temp for everything. He's the best!*/
    int hasMacro = FALSE;
    
-   if(macro_temp == NULL || line_in_file == NULL || macro == NULL || macro_temp == NULL)
+   if(macro_temp == NULL || line_in_file == NULL || macro == NULL || macro_info == NULL || temp == NULL)
    {
       printf("memory allocation failed, continuing to the next file...\n");
       return fileAfterSpreadingMacros;
@@ -28,7 +28,7 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
          hasMacro = TRUE;
          macro = getMacroName(macro_temp, macro);
 
-         isMacroLegal = islegalMacro(opcode, instruction, line_in_file, macro, macro_temp);
+         isMacroLegal = islegalMacro(opcode, instruction, registers, line_in_file, macro, macro_temp);
          if(isMacroLegal == FALSE)
          {
             printf("The macro name %s is not legal! continuing to the next file!\n", macro);
@@ -49,12 +49,16 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
          {
             printf("The macro name %s can not be added to the list! continuing to the next file!\n", macro);
          }
-      }else
+         printf("macro info: %s\n", macro_info);
+         macro_info = strcpy(macro_info, " ");
+      }
+      else
       {
          /*for checking if there is a macro name*/
-         if(is_node_in_list(macro_list, tempNode, line_in_file, IS_THERE_MACRO) == TRUE)/*if there is a macro name in the file*/
+         if(is_node_in_list(macro_list, line_in_file, IS_THERE_MACRO) == TRUE)/*if there is a macro name in the file*/
          {
-         /*fprintf(fileAfterSpreadingMacros, "%s", (char *)(tempNode->data));*/
+            temp = getPointerForMacro(macro_list, line_in_file);
+            fprintf(fileAfterSpreadingMacros, "%s", (char *)(temp->data));
          }
          else
          {
@@ -67,7 +71,6 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
    free(macro);
    free(macro_temp);
    free(macro_info);
-   free(tempNode);
     
    return fileAfterSpreadingMacros;
 }
@@ -75,14 +78,14 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
 /**
  * checks and returns true if the macro name is legal
 */
-int islegalMacro(opcodes opcode[], instructions instruction[], char *line_in_file, char *macro, char *macro_temp)
+int islegalMacro(opcodes opcode[], instructions instruction[], char registers[8][3], char *line_in_file, char *macro, char *macro_temp)
 {
    int i;
-   /*you need to get to after the macro name for macro temp tgo check if there are more characters after macro name*/
+   /*you need to get to after the macro name for macro temp to check if there are more characters after macro name*/
 
    for(i = 0; i < 16; i++)
    {
-      if(i < 4)
+      if(i < 4)/*for instructions*/
       {
          if(strstr(macro, instruction[i].instruction) != NULL)
          {
@@ -91,10 +94,19 @@ int islegalMacro(opcodes opcode[], instructions instruction[], char *line_in_fil
          }
       }
       
-      if(strstr(macro, opcode[i].opcode) != NULL)
+      if(strstr(macro, opcode[i].opcode) != NULL)/*for opcodes*/
       {
          printf("Illegal Macro Name!");
          return FALSE;/*macro is illegal*/
+      }
+
+      if(i < 8)/*for registers*/
+      {
+         if(strstr(macro, registers[i]) != NULL)
+         {
+            printf("Illegal Macro Name!");
+            return FALSE;/*macro is illegal*/
+         }
       }
    }
    
@@ -133,4 +145,21 @@ char *getMacroName(char *macro_temp, char *macro)
    }
    macro[strcspn(macro, "\r\n")] = '\0'; /* Remove trailing newline or carriage return */
    return macro;
+}
+
+Node *getPointerForMacro(List *macro_list, char *macro)
+{
+   Node *temp;
+   if (macro_list->size == 0) 
+   {
+      return NULL;
+   }
+   temp = macro_list->head;
+   while(temp != NULL)
+   {
+      if(strstr(macro, temp->name) != NULL)
+         return temp;
+   }
+
+   return NULL;
 }
