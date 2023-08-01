@@ -12,7 +12,7 @@ List* create_list()
 int add_to_list(List* list, char* name, void* data) 
 {
     Node* new_node = (Node*)malloc(sizeof(Node));
-    if(is_node_in_list(list, name) == FALSE)
+    if(is_node_in_list(list, new_node, name, ADD_TO_LIST) == FALSE)
     {
         new_node->name = name;
         new_node->data = data;
@@ -50,9 +50,11 @@ void free_list(List* list)
     free(list);
 }
 
-int is_node_in_list(List* list, char *name)
+/**
+ * 
+*/
+int is_node_in_list(List* list, Node *temp, char *name, int type)
 {
-    Node* temp;
     if (list->size == 0) 
     {
         return FALSE;
@@ -60,8 +62,16 @@ int is_node_in_list(List* list, char *name)
     temp = list->head;
     while(temp != NULL)
     {
-        if(strstr(temp->data, name) != NULL)
+        if(type == ADD_TO_LIST)
+        {
+            if(strstr(temp->name, name) != NULL)
             return TRUE;
+        }
+        else if(type == IS_THERE_MACRO)
+        {
+            if(strstr(name, temp->name) != NULL)
+            return TRUE;
+        }
         temp = temp->next;
     }
     

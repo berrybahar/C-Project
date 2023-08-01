@@ -4,25 +4,29 @@
 FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcode[], instructions instruction[])
 {
    FILE *fileAfterSpreadingMacros = fopen(fileExtensionChanger(fileName, ".am"), "w");
-   int fileSize = getFileSize(iofp);
+   Node *tempNode = (Node*)malloc(sizeof(Node));
+   long fileSize = getFileSize(iofp);
    char *line_in_file = (char *)(malloc(sizeof(char *) * fileSize));
    List* macro_list = create_list();
    char *macro = (char *)(malloc(sizeof(char *) * fileSize));/*macro's name*/
-   char *macro_temp;/*temp for macro's name*/
-   char *macro_info;/*the macro's content*/
+   char *macro_info = (char *)(malloc(sizeof(char *) * fileSize));/*the macro's content*/
+   char *macro_temp = (char *)(malloc(sizeof(char *) * fileSize));/*temp for everything. He's the best!*/
    int hasMacro = FALSE;
+   
+   if(macro_temp == NULL || line_in_file == NULL || macro == NULL || macro_temp == NULL)
+   {
+      printf("memory allocation failed, continuing to the next file...\n");
+      return fileAfterSpreadingMacros;
+   } 
     
    while (!feof(iofp))
    {
       fgets(line_in_file, fileSize, iofp);
 
-      if((macro_temp = strstr(line_in_file, "mcro")) != NULL) /*if there is macro*/
+      if((macro_temp = strstr(line_in_file, "mcro")) != NULL) /*if the  re is macro*/
       {
          hasMacro = TRUE;
          macro = getMacroName(macro_temp, macro);
-         /*you need to check if there are characters after the macro name*/
-
-         printf("The macro name %s.\n", macro);
 
          isMacroLegal = islegalMacro(opcode, instruction, line_in_file, macro, macro_temp);
          if(isMacroLegal == FALSE)
@@ -30,27 +34,16 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
             printf("The macro name %s is not legal! continuing to the next file!\n", macro);
          }
 
-         macro_info = (char *)malloc(fileSize);
          while(hasMacro == TRUE)/*for adding the macro's definition*/
          {
-            fgets(line_in_file, fileSize, iofp);/*get to the next line*/
-
-            macro_info = (char *)malloc(fileSize);
-            if(macro_info == NULL)
-            {
-               printf("memory allocation failed, continuing to the next file...\n");
-               break;
-            } 
-
-            strncpy(macro_info,line_in_file, fileSize);/*copy the line to the macro's content*/
-               
-            if(strstr(line_in_file, "endmcro") != NULL)
-            {
-               hasMacro = FALSE;
-               printf("macro info is: %s\n", macro_info);
-            }
+            fgets(macro_temp, fileSize, iofp);/*get to the next line*/
+   
+            if(strstr(macro_temp, "endmcro") != NULL)
+               hasMacro = FALSE;  
+            
+            if(hasMacro == TRUE)
+               strcat(macro_info, macro_temp);/*copy the line to the macro's content*/
          }
-         free(macro_info);/*free the macro info*/
 
          if(add_to_list(macro_list, macro, macro_info) == FALSE)/*if the macro name does exist in the macro list*/
          {
@@ -59,18 +52,22 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
       }else
       {
          /*for checking if there is a macro name*/
-         /*if()if there is a macro name in the file
+         if(is_node_in_list(macro_list, tempNode, line_in_file, IS_THERE_MACRO) == TRUE)/*if there is a macro name in the file*/
          {
-
+            /*fprintf(fileAfterSpreadingMacros, "%s", (char *)(tempNode->data));*/
          }
          else
          {
             fprintf(fileAfterSpreadingMacros, "%s", line_in_file);
-         }*/
-         fprintf(fileAfterSpreadingMacros, "%s", line_in_file);
+         }
       }
    }
    free_list(macro_list);
+   free(line_in_file);
+   free(macro);
+   free(macro_temp);
+   free(macro_info);
+   free(tempNode);
     
    return fileAfterSpreadingMacros;
 }
@@ -101,12 +98,9 @@ int islegalMacro(opcodes opcode[], instructions instruction[], char *line_in_fil
       }
    }
    
-   while(*macro_temp != '\n' && *macro_temp != '\0')
-   {
-      if(*macro_temp != '\t' || *macro_temp != ' ' || *macro_temp != '\n')
-         return FALSE; /*macro is illegal*/
-      macro_temp++;
-   }
+   /*for checking if there are characters after macro declaration*/
+   
+
    return TRUE;
 }
 
