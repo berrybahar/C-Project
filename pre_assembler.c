@@ -54,7 +54,7 @@ FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcod
          /*for checking if there is a macro name*/
          if(is_node_in_list(macro_list, tempNode, line_in_file, IS_THERE_MACRO) == TRUE)/*if there is a macro name in the file*/
          {
-            /*fprintf(fileAfterSpreadingMacros, "%s", (char *)(tempNode->data));*/
+         /*fprintf(fileAfterSpreadingMacros, "%s", (char *)(tempNode->data));*/
          }
          else
          {
