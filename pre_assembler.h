@@ -1,18 +1,23 @@
-#include "instructions.h"
-#include "opcodes.h"
-#define MAX 100
+#include "assembler.h"
+typedef struct Mcr {
+    char *name;
+    char *code;
+} Mcr;
 
-struct Macro {
-    char mname[MAX];
-    char mcontent[MAX];
-    struct Macro* next;
-};
+typedef struct NodeMcr {
+    struct Mcr data;
+    struct NodeMcr *next;
+} NodeMcr;
 
-void addToMtable(struct Macro *head , char name[] , char content[]);
-void printMacroTable(struct Macro *tail);
-int IsMacroOrEndm(char line[]);
-void InsertName(struct Macro *temp, char line[]);
-void InsertContent(struct Macro *temp, FILE *fp);
-int PreReadFile(int i, char *argv[],struct Macro *head);
-int IsMacroCall(char line[], FILE *fpw,struct Macro *tail);
-void PreWriteFile(int i, char *argv[],struct Macro *tail);
+typedef struct ListMcr {
+    int count;
+    NodeMcr *head;
+} ListMcr;
+
+error preAssembler(char* fileName);
+char *concatenateStrings(char* str1, char* str2);
+void addToList(NodeMcr * newElement, ListMcr* list);
+struct NodeMcr * createNode(char * name, char* code);
+error is_mcr_def( char **lineOut);
+error is_mcrEnd(char *line);
+error is_name_of_mcr(char* line,ListMcr * mcrList);
