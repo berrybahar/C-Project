@@ -2,10 +2,8 @@
 
 int main(int argc, char *argv[])
 {   
-    FILE *iofp;
-    char *extendedFileName;
-    FILE *fileAfterSpreadingMacros;
-    int isMacroLegal = FALSE; /*macro name can't be name of opcode or name of instruction*/
+    int flag, i;
+    int IC, DC;
     
     /***********************************************************************************************************************/
     opcodes opcode[] = 
@@ -40,28 +38,20 @@ int main(int argc, char *argv[])
 
     char registers[8][3]  = {"@r0", "@r1", "@r2", "@r3", "@r4", "@r5", "@r6", "@r7"};
 /*******************************************************************************************************************************/    
-
-    if(argc == 1){
-        printf("No file entered!\n");/**/
-    }
-    
-    while(--argc > 0)
+    for (i = 1; i < argc; i++)
     {
-        extendedFileName = fileExtensionChanger(*++argv, ".as");/*changes the extension of the file to .as*/
-        if((iofp = fopen(extendedFileName, "r")) == NULL)
+        struct  Macro* Mtail= NULL;
+        struct  Macro* Mhead = NULL;
+
+        Mhead = (struct Macro*)malloc(sizeof(struct Macro));
+        Mtail = (struct Macro*)malloc(sizeof(struct Macro));
+        Mtail = Mhead;
+    
+        flag = PreReadFile(i,argv,Mhead);
+        if(!flag)
         {
-            printf("Cannot open file %s, continue with next file.\n", *argv);
-        }
-        else
-        {
-            /*success!*/
-            fileAfterSpreadingMacros = macroSpreading(iofp, *argv, isMacroLegal , opcode, instruction, registers);
-            if(isMacroLegal == TRUE)/*if is there an illegal macro definition in the file*/
-            {
-                
-            }
+            PreWriteFile(i,argv,Mtail);
         }
     }
-    
     return 1;
 }

@@ -1,7 +1,18 @@
 #include "instructions.h"
 #include "opcodes.h"
-FILE *macroSpreading(FILE *iofp, char *fileName, int isMacroLegal, opcodes opcode[], instructions instruction[], char registers[8][3]);
-int islegalMacro(opcodes opcode[], instructions instruction[], char registers[8][3], char *line_in_file, char *macro, char *macro_temp);
-int getFileSize(FILE *iofp);
-char *getMacroName(char *macro_temp, char *macro);
-Node *getPointerForMacro(List *macro_list, char *macro);
+#define MAX 100
+
+struct Macro {
+    char mname[MAX];
+    char mcontent[MAX];
+    struct Macro* next;
+};
+
+void addToMtable(struct Macro *head , char name[] , char content[]);
+void printMacroTable(struct Macro *tail);
+int IsMacroOrEndm(char line[]);
+void InsertName(struct Macro *temp, char line[]);
+void InsertContent(struct Macro *temp, FILE *fp);
+int PreReadFile(int i, char *argv[],struct Macro *head);
+int IsMacroCall(char line[], FILE *fpw,struct Macro *tail);
+void PreWriteFile(int i, char *argv[],struct Macro *tail);
