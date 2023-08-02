@@ -1,4 +1,4 @@
-#include "assembler.h"
+#include "main.h"
 
 void freeString(char **ptr) {
     if (*ptr) {

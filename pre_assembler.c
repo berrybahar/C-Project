@@ -45,6 +45,22 @@ error isCommand(char *command) {
         return mcrNameIncorrect;
     else if (!strcmp(command, ".extern"))
         return mcrNameIncorrect;
+    else if (!strcmp(command, "@r0"))
+        return mcrNameIncorrect;
+    else if (!strcmp(command, "@r1"))
+        return mcrNameIncorrect;
+    else if (!strcmp(command, "@r2"))
+        return mcrNameIncorrect;
+    else if (!strcmp(command, "@r3"))
+        return mcrNameIncorrect;
+    else if (!strcmp(command, "@r4"))
+        return mcrNameIncorrect;
+    else if (!strcmp(command, "@r5"))
+        return mcrNameIncorrect;
+    else if (!strcmp(command, "@r6"))
+        return mcrNameIncorrect;
+    else if (!strcmp(command, "@r"))
+        return mcrNameIncorrect;
     else
         return success;
 }
