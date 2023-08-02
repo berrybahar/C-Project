@@ -9,3 +9,6 @@ pre_assembler.o: pre_assembler.c pre_assembler.h
 
 functions.o: functions.c 
 		     gcc -c -ansi -Wall -pedantic functions.c -o functions.o
+
+assembler.o: assembler.C assembler.h
+			 gcc -c -ansi -Wall -pedantic assembler.c -o assembler.o
