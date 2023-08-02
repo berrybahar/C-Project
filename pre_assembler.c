@@ -143,7 +143,6 @@ void PreWriteFile(int i, char *argv[],struct Macro *tail)
    strcpy(fname,argv[i]);
    strcpy(fname2,argv[i]);
    fileExtensionChanger(fname, ".as");
-   printf();
    strncat(fname2, ".am", 3);
    fpr = fopen(fname,"r");
    fpw = fopen(fname2,  "w");
