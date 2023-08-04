@@ -4,7 +4,7 @@ LOOP:   jmp L1
             sub @r1, @r4
             bne END
         endmcro
-        prn -5
+        prn -9
         bne LOOP
         m1
 L1:     inc K

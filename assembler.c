@@ -7,7 +7,8 @@
 void binaryOf(char binaryForm[], unsigned num, int size) 
 {
     int i = 0;
-    while (num > 0 && i < size) {
+    while (num > 0 && i < size) 
+    {
         if (num % 2 == 0)
             binaryForm[i] = '0';
         else
@@ -337,7 +338,7 @@ error codeString(char *line, list *dataList, int *counter)
  * If a label is present, the function also generates a label node and adds it to the list of instructions.*/
 error codeCommand (char *line, list *instructionList, opcode command, int *count) 
 {
-    addressMethod am1 = 0, am2 = 0;
+    addressMethod am1 = 0,/*src*/ am2 = 0/*dest*/;
     char *label = NULL, *arg1 = NULL, *arg2 = NULL, *endPTR;
     int argVal;
     Node *newNode = (Node *) calloc(1, sizeof(Node));
@@ -413,7 +414,7 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
         case red:
         case prn:
             label = arg1 = NULL;
-            am1 = 1;/**/
+            am1 = 0;/**/
             getToken(&line, &arg2, NULL);
             if (!arg2) 
             {
@@ -425,7 +426,7 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
                 fprintf(stderr, "\tCommand has too many arguments\n");
                 return tooManyArg;
             }
-            if (!(command == prn || command == not) && idArg(&arg2, &am2) == success && am2 == immediate) /*changed*/
+            if (idArg(&arg2, &am2) == success  &&  !(command == prn || command == not) && am2 == immediate) /*changed*/
             {
                 fprintf(stderr, "\tCommand has a wrong type of argument\n");
                 return wrongArg;
