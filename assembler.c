@@ -276,8 +276,10 @@ error codeString(char *line, list *dataList, int *counter)
         OGNode = OGNode->next;
     while (ch != '\0' && ch != '\"')
     {
+        printf("%c\n", ch);
         if(isalpha(ch))/**/
         {
+            printf("%c\n", ch);
             free(line);
             fprintf(stderr, "\tA .string command is missing an argument\n");
             return tooManyArg;
