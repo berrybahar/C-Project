@@ -274,9 +274,9 @@ error codeString(char *line, list *dataList, int *counter)
     ch = line[i];
     while (OGNode)
         OGNode = OGNode->next;
-    while (ch != '\0' && ch != '\"') 
+    while (ch != '\0' && ch != '\"')
     {
-        if(isalpha(ch))
+        if(isalpha(ch))/**/
         {
             free(line);
             fprintf(stderr, "\tA .string command is missing an argument\n");
@@ -284,7 +284,7 @@ error codeString(char *line, list *dataList, int *counter)
         }
         ch = line[i++];
     }
-    if (ch == '\0') 
+    if (ch == '\0')
     {
         free(line);
         fprintf(stderr, "\tA .string command is missing an argument\n");
@@ -342,9 +342,9 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
     checkAlloc(newNode);
     switch (command) 
     {
-        /*case jmp:*//*you need to change theese because it's different*/
-        /*case bne:*/
-        /*case jsr:*/
+        case jmp:/*you need to change theese because it's different*/
+        case bne:
+        case jsr:
             getToken(&line, &label, "(");
             am1 = 0;
             if (!label) 
@@ -360,31 +360,30 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
             } else 
             {
                 getToken(&line, &arg1, ",");
-                idArg(&arg1, &prm1);
                 getToken(&line, &arg2, ")");
-                idArg(&arg2, &prm2);
                 clearWhiteSpace(&line);
                 if (line) 
                 {
                     fprintf(stderr, "\tCommand has too many arguments\n");
                     return tooManyArg;
-                }
-                am2 = jumpWP;
+                }        
             }
             if (arg2 == NULL) 
             {
                 fprintf(stderr, "\tCommand is missing arguments\n");
                 return missingArg;
             }
-            if (am2 != direct && am2 != jumpWP) 
+            /*if (am2 != direct && am2 != jumpWP) 
             {
                 fprintf(stderr, "\tCommand has a wrong type of argument\n");
                 return wrongArg;
-            }
+            }*/
             break;
         case mov:/*theese cases are seemingly correct*/
         case add:
         case sub:
+        case lea:
+        case cmp:
             getToken(&line, &arg1, ",");
             getToken(&line, &arg2, NULL);
             if (!arg2 || !arg1 || !strcmp(arg1, "")) 
@@ -409,12 +408,10 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
         case clr:
         case inc:
         case dec:
-        case jmp:
-        case bne:
         case red:
-        case jsr:
+        case prn:
             label = arg1 = NULL;
-            am1 = 0;
+            am1 = 1;/**/
             getToken(&line, &arg2, NULL);
             if (!arg2) 
             {
@@ -460,8 +457,8 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
         clearWhiteSpace(&label);
         strcpy(newNode->data.name, label);
         addToList(instructionList, &newNode);
-        am1 = prm1;
-        am2 = prm2;
+        /*am1 = prm1;
+        am2 = prm2;*/
     }
 
     if (arg1) 
