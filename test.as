@@ -5,16 +5,11 @@ LOOP:   jmp L1
             bne END
         endmcro
         prn -5
-        mcro m2
-            sub @r1, @r4
-            bne END
-        endmcro
         bne LOOP
         m1
 L1:     inc K
         bne LOOP
-        m2
 END:    stop
-STR:    .string "abcdef" 
+STR:    .string "abcdef"
 LENGTH: .data 6,-9,15
 K:      .data 22
