@@ -1,15 +1,18 @@
 #include "main.h"
-typedef struct Mcr {
+typedef struct Mcr 
+{
     char *name;
     char *code;
 } Mcr;
 
-typedef struct NodeMcr {
+typedef struct NodeMcr 
+{
     struct Mcr data;
     struct NodeMcr *next;
 } NodeMcr;
 
-typedef struct ListMcr {
+typedef struct ListMcr 
+{
     int count;
     NodeMcr *head;
 } ListMcr;

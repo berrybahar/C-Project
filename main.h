@@ -6,11 +6,12 @@
 
 /*Various defines*/
 #define LINE_MAX_LENGTH 81
-#define WORD 15
+#define WORD 13
 #define LABEL_MAX_SIZE 31
 
 /*Enum for various error handling*/
-typedef enum Error{
+typedef enum Error
+{
     success,
     fileOpeningErr,
     fileClosingErr,
@@ -38,7 +39,8 @@ typedef enum Error{
 }error;
 
 /*Enum for opcodes */
-typedef enum Opcode {
+typedef enum Opcode 
+{
     mov = 0,
     cmp = 1,
     add = 2,

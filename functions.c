@@ -1,7 +1,9 @@
 #include "main.h"
 
-void freeString(char **ptr) {
-    if (*ptr) {
+void freeString(char **ptr) 
+{
+    if (*ptr) 
+    {
         free(*ptr);
         *ptr = NULL;
     }
@@ -10,11 +12,14 @@ void freeString(char **ptr) {
 /*Function receives char *
  * the functions checks if the string is alpha or number if so return success
  * if not returns an error code represented as an error enum*/
-error strIsAlphaDigit(char* str){
+error strIsAlphaDigit(char* str)
+{
     int i;
 
-    for (i=0; str[i]!= '\0' ; i++) {
-        if(!isalnum(str[i])){
+    for (i=0; str[i]!= '\0' ; i++) 
+    {
+        if(!isalnum(str[i]))
+        {
             return wrongDefLabel;
         }
     }
@@ -24,10 +29,12 @@ error strIsAlphaDigit(char* str){
 /*remove white spaces from the beginning of the string
  * received pointer to string
  * return pointer to string*/
-char *removeWhiteSpace(char *str) {
+char *removeWhiteSpace(char *str) 
+{
     int len = (int) strlen(str), i;
     char *result = str;
-    for (i = 0; i < len; i++) {
+    for (i = 0; i < len; i++) 
+    {
         if (isspace(str[i]))
             result++;
         else
@@ -39,8 +46,10 @@ char *removeWhiteSpace(char *str) {
 
 /*This function takes in a void pointer as an argument and checks if the pointer is null.
  * If the pointer is null, it prints an error message and terminates the program.*/
-void checkAlloc(void *test) {
-    if (!test) {
+void checkAlloc(void *test) 
+{
+    if (!test) 
+    {
         perror("Memory allocation error");
         exit(1);
     }
@@ -48,11 +57,13 @@ void checkAlloc(void *test) {
 
 /*Frees several pointers, sets them to Null, called with address of the pointer:
  * LAST ONE MUST BE NULL: freeMulti(&a,&b,&c,NULL);*/
-void freeMulti(void *ptr, ...) {
+void freeMulti(void *ptr, ...) 
+{
     void **nextPtr = ptr;
     va_list args;
     va_start(args, ptr);
-    while (nextPtr != NULL) {
+    while (nextPtr != NULL) 
+    {
         free(*nextPtr);
         *nextPtr = NULL;
         nextPtr = va_arg(args, void **);
@@ -63,14 +74,16 @@ void freeMulti(void *ptr, ...) {
 /* Function receives a pointer to a FILE pointer and a file path (string)
  * The function opens the file and alerts if any errors occurred
  * returns an error code represented as an error enum*/
-error openFile(FILE **filePointer, char *filePath, char *suffix) {
+error openFile(FILE **filePointer, char *filePath, char *suffix) 
+{
     char *path = (char *) malloc(strlen(filePath) + strlen(suffix) + 1);
     checkAlloc(path);
     strcpy(path, filePath);
     strcat(path, suffix);
     *filePointer = fopen(path, "r");
     free(path);
-    if (!*filePointer) {
+    if (!*filePointer) 
+    {
         perror("File opening error");
         return fileOpeningErr;
     }
@@ -80,14 +93,16 @@ error openFile(FILE **filePointer, char *filePath, char *suffix) {
 /* Function receives a pointer to a FILE pointer and a file path (string)
  * The function creates the file and alerts if any errors occurred
  * returns an error code represented as an error enum*/
-error createFile(FILE **filePointer, char *filePath, char *suffix) {
+error createFile(FILE **filePointer, char *filePath, char *suffix) 
+{
     char *path = (char *) malloc(strlen(filePath) + strlen(suffix) + 1);
     checkAlloc(path);
     strcpy(path, filePath);
     strcat(path, suffix);
     *filePointer = fopen(path, "w");
     free(path);
-    if (!*filePointer) {
+    if (!*filePointer) 
+    {
         perror("File creating error");
         return fileOpeningErr;
     }
@@ -97,7 +112,8 @@ error createFile(FILE **filePointer, char *filePath, char *suffix) {
 /* Function receives a file path (string)
  * The function deletes the file and alerts if any errors occurred
  * returns an error code represented as an error enum*/
-error removeFile(char *filePath, char*suffix) {
+error removeFile(char *filePath, char*suffix) 
+{
     char *path = (char *) malloc(strlen(filePath) + strlen(suffix) + 1);
     int status;
     checkAlloc(path);
@@ -113,7 +129,8 @@ error removeFile(char *filePath, char*suffix) {
 /* Function receives a FILE pointer
  * The function closes the file and alerts if any errors occurred
  * returns an error code represented as an error enum*/
-error closeFile(FILE *filePointer) {
+error closeFile(FILE *filePointer) 
+{
     return ((fclose(filePointer) == EOF) ? fileClosingErr : success);
 }
 
@@ -124,11 +141,13 @@ error closeFile(FILE *filePointer) {
  * A list of deliminators (string)
  * Function returns the first token found, and removes if from the source string
  * if none of the delim was found, source is unchanged,token will be NULL */
-error getToken(char **str, char **token, char *delim) {
+error getToken(char **str, char **token, char *delim) 
+{
     int i = 0;
     char *chAfterTok;
     /*Check that all parameters are good*/
-    if (!str || !(*str) || !token) {
+    if (!str || !(*str) || !token) 
+    {
         if (token)
             *token = NULL;
         if (str)
@@ -139,8 +158,10 @@ error getToken(char **str, char **token, char *delim) {
     while (isspace((*str)[i]))
         i++;
     /*if delim is null, copy entire string to token*/
-    if (!delim) {
-        if (strcmp(*str, "")) {
+    if (!delim) 
+    {
+        if (strcmp(*str, "")) 
+        {
             *token = (char *) malloc(strlen(*str + i) + 1);
             checkAlloc(token);
             strcpy(*token, *str + i);
@@ -151,14 +172,16 @@ error getToken(char **str, char **token, char *delim) {
         return success;
     }
     /*If reached the end of the string*/
-    if ((*str)[i] == '\0') {
+    if ((*str)[i] == '\0') 
+    {
         free(*str);
         *str = NULL;
         *token = NULL;
         return emptyArg;
     }
     /*If deliminator is found. Else, deliminator wasn't found*/
-    if ((chAfterTok = strpbrk(*str + i, delim))) {
+    if ((chAfterTok = strpbrk(*str + i, delim))) 
+    {
         *(chAfterTok++) = '\0'; /*put '\0' then increase by one*/
         /*Prepare a place for the token, size of that ever is left in '*str' +1 */
         *token = (char *) calloc(chAfterTok - (*str + i), sizeof(char));
@@ -177,7 +200,8 @@ error getToken(char **str, char **token, char *delim) {
 /*This function removes comments from a string by finding the first semicolon: ';'
  * and truncating the string at that point.
  * Then reallocates memory for the modified string and returns a success or error code.*/
-error removeComments(char **str) {
+error removeComments(char **str) 
+{
     char *ch;
     if (str == NULL || *str == NULL)
         return emptyArg;
@@ -190,7 +214,8 @@ error removeComments(char **str) {
     return success;
 }
 
-char *my_strdup(const char *s) {
+char *my_strdup(const char *s) 
+{
     size_t len = strlen(s) + 1; /* +1 for null terminator*/
     char *newstr = malloc(len);
     if (newstr == NULL) return NULL; /* handle allocation failure*/
@@ -200,12 +225,14 @@ char *my_strdup(const char *s) {
 
 /* get one line in a time, the function receives pointer to a string and pointer to a file,
  * takes one line from the file and copy it to the receiving string*/
-error getOneLine(char **line_out, FILE *fp) {
+error getOneLine(char **line_out, FILE *fp) 
+{
     int buffer_size=LINE_MAX_LENGTH;
     int bytes_readen = 0;
     char *buffer = (char *) malloc(LINE_MAX_LENGTH * sizeof(char));
     checkAlloc(buffer);
-    while (1) {
+    while (1) 
+    {
         char current = (char) fgetc(fp);
         if (current == EOF || current == '\n') {
             /*buffer[bytes_readen] = '\n';*/
@@ -215,13 +242,15 @@ error getOneLine(char **line_out, FILE *fp) {
             free(buffer);
             return (current == EOF) ? endOfFile : success;
         }
-        else if (bytes_readen >= LINE_MAX_LENGTH - 1) {
+        else if (bytes_readen >= LINE_MAX_LENGTH - 1) 
+        {
             buffer= (char*) realloc(buffer,(buffer_size*sizeof(char) )*2);
             if (buffer == NULL) {
                 return memoryAllocErr;
             }
         }
-        else {
+        else 
+        {
             if(current == '\r')
                 buffer[bytes_readen++] = '\0';
             buffer[bytes_readen++] = current;
