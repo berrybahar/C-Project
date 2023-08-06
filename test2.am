@@ -1,4 +1,5 @@
 .entry LENGTH
+.entry loop1
 .extern W
 MAIN: mov @r3 ,LENGTH
 loop1: jmp L1
@@ -7,7 +8,6 @@ bne W
 sub @r1, @r4
 bne L3
 L1: inc K
-.entry loop1
 jmp W
 END: stop
 STR: .string "abcdef"

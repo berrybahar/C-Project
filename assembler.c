@@ -723,6 +723,11 @@ error firstRun (char *path)
         }
         printf("%s\n", line);
         getToken(&line, &label, ":"); /*Get label if exists*/
+                /*********************comment*******************************/
+                /*printf("\n");*/
+                /*printList(&labelList, NULL);*/
+                /*printf("\n");*/
+                /***********************************************************/
         getToken(&line, &word, " \t\n"); /*Get first word of line*/
         if (!word)
             getToken(&line, &word, NULL);
@@ -734,8 +739,7 @@ error firstRun (char *path)
         errFlag = idCommand(word, &commandOP); /*Identify the command*/
         if (label && (commandOP != entry && commandOP != external)) 
         {
-            errFlag = setLabelAddress(&labelList, label, (commandOP == data || commandOP == string ? DC : IC),
-                                      commandOP);
+            errFlag = setLabelAddress(&labelList, label, (commandOP == data || commandOP == string ? DC : IC),commandOP);
             if (errFlag != success)
                 errForSecond = errFlag;
         }
@@ -759,6 +763,11 @@ error firstRun (char *path)
                     freeMulti(&label, NULL);
                 }
                 errFlag = codeLabel(commandOP, line, &labelList);
+                /*********************comment*******************************/
+                /*printf("\n");*/
+                /*printList(&labelList, NULL);*/
+                /*printf("\n");*/
+                /***********************************************************/
                 break;
             default:
                 errFlag = codeCommand(line, &instructionList, commandOP, &IC);
@@ -772,13 +781,13 @@ error firstRun (char *path)
     while (node) 
     {
         node->data.place += IC;
-        node = node->next;
+        node = node->next; 
     }
     node = labelList.head;
     while (node) 
     {
-        if (node->data.type == data || node->data.type == string || node->data.type == entry ||
-            node->data.type == external)
+        if ((node->data.type == data || node->data.type == string || node->data.type == entry ||
+            node->data.type == external) && (node->data.place<=100))
             node->data.place += IC;
         node = node->next;
     }
@@ -789,11 +798,12 @@ error firstRun (char *path)
     closeFile(stream);
 
 /********************in commend************************/
-    printList(&instructionList, NULL);
-    printf("\n");
-    printList(&dataList, NULL);
-    printf("\n");
-    printList(&labelList, NULL);
+   /* printList(&instructionList, NULL);*/
+   /* printf("\n");*/
+   /* printList(&dataList, NULL);*/
+   /* printf("\n");*/
+   /* printList(&labelList, NULL);*/
+/******************************************************/
 
 
     secondRun(&dataList, &labelList, &instructionList, path, errForSecond,IC-100,DC);
