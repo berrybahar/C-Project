@@ -894,7 +894,7 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
                     fputs(currentNode->data.name, fpEnt);
                     fputs("\t", fpEnt);
                     binaryOf(currentNode->data.InstructionCode,currentNode->data.place,DATA_SIZE);
-                    fputs(currentNode->data.InstructionCode,fpEnt);
+                    fprintf(fpEnt,"%d",currentNode->data.place);
                     fputs("\n", fpEnt);
                 }
                 currentNode = currentNode->next;
@@ -915,8 +915,7 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
                     {
                         fputs(currentNode->data.name, fpExt);
                         fputs("\t", fpExt);
-                        binaryOf(currentNode->data.InstructionCode,currentNode->data.place,DATA_SIZE);
-                        fputs(currentNode->data.InstructionCode,fpExt);
+                        fprintf(fpExt,"%d",currentNode->data.place);
                         fputs("\n", fpExt);
                     }
                 }
