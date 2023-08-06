@@ -348,7 +348,7 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
         case jmp:/*you need to change theese because it's different*/
         case bne:
         case jsr:
-            getToken(&line, &label, "(");
+            /*getToken(&line, &label, "(");*/
             am1 = 0;
             if (!label) 
             {
@@ -362,8 +362,8 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
                 arg1 = NULL;
             } else 
             {
-                getToken(&line, &arg1, ",");
-                getToken(&line, &arg2, ")");
+               /* getToken(&line, &arg1, ",");*/
+                /*getToken(&line, &arg2, ")");*/
                 clearWhiteSpace(&line);
                 if (line) 
                 {
@@ -787,12 +787,16 @@ error firstRun (char *path)
     else
         fprintf(stderr,"Error(s) were found in your code, cannot assemble.\n");
     closeFile(stream);
-    /*printList(&instructionList, NULL);
+
+/********************in commend************************/
+    printList(&instructionList, NULL);
     printf("\n");
     printList(&dataList, NULL);
     printf("\n");
-    printList(&labelList, NULL);*/
-    secondRun(&dataList, &labelList, &instructionList, path, errForSecond);
+    printList(&labelList, NULL);
+
+
+    secondRun(&dataList, &labelList, &instructionList, path, errForSecond,IC-100,DC);
     clearList(&instructionList, NULL);
     clearList(&labelList, NULL);
     clearList(&dataList, NULL);
@@ -806,7 +810,7 @@ error firstRun (char *path)
  * and if there is a external label creates file of external
  * returns success
  * */
-error secondRun(list* dataList, list* labelList, list* instructionList,char* fileName, error errFlag) 
+error secondRun(list* dataList, list* labelList, list* instructionList,char* fileName, error errFlag,int IC,int DC) 
 {
     Node *currentNode = NULL, *nodeOut = NULL;
     int i, cntEnt = 0, cntExt = 0;
@@ -828,7 +832,7 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
                 } else if (nodeOut->data.type == entry) 
                 {
                     cntEnt++;
-                    binaryOf(currentNode->data.InstructionCode, nodeOut->data.place, ADDRESS_SIZE);
+                    binaryOf(currentNode->data.InstructionCode, 0, ADDRESS_SIZE);
                     strcpy(currentNode->data.InstructionCode + ARE_START, "10");
                 } else 
                 {
@@ -849,6 +853,7 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
         createFile(&fpObj, fileName, ".obj");
         /*write the instruction codes into new file ".obj"*/
         currentNode = instructionList->head;
+        fprintf(fpObj,"%d   %d\n",IC,DC);
         for (i = 0; i < instructionList->count; i++) 
         {
             fprintf(fpObj, "%04d\t", currentNode->data.place);
