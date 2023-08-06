@@ -862,7 +862,7 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
                 } else if (nodeOut->data.type == entry) 
                 {
                     cntEnt++;
-                    binaryOf(currentNode->data.InstructionCode, 0, ADDRESS_SIZE);
+                    binaryOf(currentNode->data.InstructionCode, nodeOut->data.place, ADDRESS_SIZE);
                     strcpy(currentNode->data.InstructionCode + ARE_START, "10");
                 } else 
                 {
