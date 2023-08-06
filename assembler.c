@@ -39,7 +39,26 @@ void reverseSTR(char str[],int size)
     }
 }
 
+void binaryTo64(char binary[13], char *base64)
+{   
+    int i = 0, j = 0, temp = 0;
+    char char_set[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    
+    for(j = 0, i = 5; i >= 0 && j < 6; i--, j++)
+    {
+        temp += ((binary[j] - '0') * pow(2, i));
+    }
+    base64[0] = char_set[temp];
+    
+    temp = 0;
+    for(j = 6, i = 5; i >= 0 && j < 13; i--, j++)
+    {
+        temp += ((binary[j] - '0') * pow(2, i));
+    }
+    base64[1] = char_set[temp];
 
+    base64[2] = '\0';
+}
 
 /* function takes a pointer to a string (char*) which is dynamically allocated, and five unallocated pointers to string (char*)
  * function divides the given string to Label, command and two arguments (depending on each existence) */
@@ -822,6 +841,7 @@ error firstRun (char *path)
  * */
 error secondRun(list* dataList, list* labelList, list* instructionList,char* fileName, error errFlag,int IC,int DC) 
 {
+    char *base64 = (char *)(malloc((sizeof(char *) * 2)));
     Node *currentNode = NULL, *nodeOut = NULL;
     int i, cntEnt = 0, cntExt = 0;
     FILE *fpObj = NULL, *fpEnt = NULL, *fpExt = NULL;
@@ -866,8 +886,8 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
         fprintf(fpObj,"%d   %d\n",IC,DC);
         for (i = 0; i < instructionList->count; i++) 
         {
-            fprintf(fpObj, "%04d\t", currentNode->data.place);
-            fputs(currentNode->data.InstructionCode, fpObj);
+            binaryTo64(currentNode->data.InstructionCode, base64);
+            fprintf(fpObj, "%s", base64);
             fputs("\n", fpObj);
             currentNode = currentNode->next;
         }
@@ -875,8 +895,8 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
         currentNode = dataList->head;
         for (i = 0; i < dataList->count; i++) 
         {
-            fprintf(fpObj, "%04d\t", currentNode->data.place);
-            fputs(currentNode->data.InstructionCode, fpObj);
+            binaryTo64(currentNode->data.InstructionCode, base64);
+            fprintf(fpObj, "%s", base64);
             fputs("\n", fpObj);
             currentNode = currentNode->next;
         }
@@ -929,6 +949,7 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
         fprintf(stderr, "Errors founds, cannot create file %s.obj\n", fileName);
         return success;
     }
+    free(base64);
     fprintf(stderr,"second run executed successfully.\n" );
     fprintf(stderr, "file %s.obj created successfully.\n", fileName);
     return success;

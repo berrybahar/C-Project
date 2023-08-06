@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdarg.h>
+#include <math.h>
 
 /*Various defines*/
 #define LINE_MAX_LENGTH 81
