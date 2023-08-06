@@ -18,10 +18,10 @@
 #define DATA_SIZE 12/**/
 
 typedef enum AreType 
-{/****/
-    ARE_Immediate = 1,
-    ARE_external = 3,
-    ARE_relocate = 5
+{/** It should be like this ARE  working */
+    ARE_Immediate = 0,
+    ARE_external = 1,
+    ARE_relocate = 2
 } AreType;
 
 typedef enum AddressMethod 

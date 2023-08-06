@@ -472,7 +472,7 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
         switch (am1) 
         {
             case immediate:
-                argVal = strtol(arg1 + 1, &endPTR, 10);
+                argVal = strtol(arg1, &endPTR, 10);
                 if (strcmp(endPTR, "")) 
                 {
                     fprintf(stderr, "\tCommand has an unknown argument\n");
@@ -483,7 +483,7 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
                 addToList(instructionList, &newNode);
                 break;
             case directRegister:
-                binaryOf(newNode->data.InstructionCode + REGI_1_START, arg1[1] - '0', REGI_SIZE);
+                binaryOf(newNode->data.InstructionCode + REGI_1_START, arg1[2] - '0', REGI_SIZE);/*change arg1[1] Because @*/
                 binaryOf(newNode->data.InstructionCode + REGI_2_START, 0, REGI_SIZE);
                 binaryOf(newNode->data.InstructionCode + ARE_START, ARE_Immediate, ARE_SIZE);
                 if (am2 != directRegister)
@@ -503,13 +503,13 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
                 newNode = (Node *) calloc(1, sizeof(Node));
                 checkAlloc(newNode);
                 newNode->data.place = (*count)++;
-                argVal = strtol(arg2 + 1, &endPTR, 10);
+                argVal = strtol(arg2, &endPTR, 10);
                 if (strcmp(endPTR, "")) 
                 {
                     fprintf(stderr, "\tCommand has an unknown argument\n");
                     return unknownArg;
                 }
-                binaryOf(newNode->data.InstructionCode, argVal, 12);
+                binaryOf(newNode->data.InstructionCode, argVal, IMMEDIATE_SIZE);
                 binaryOf(newNode->data.InstructionCode + ARE_START, ARE_Immediate, 2);
                 break;
             case directRegister:
@@ -520,7 +520,7 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
                     newNode->data.place = (*count)++;
                     binaryOf(newNode->data.InstructionCode + REGI_1_START, 0, REGI_SIZE);
                 }
-                binaryOf(newNode->data.InstructionCode + REGI_2_START, arg2[1] - '0', REGI_SIZE);
+                binaryOf(newNode->data.InstructionCode + REGI_2_START, arg2[2] - '0', REGI_SIZE);/*change arg1[1] Because @*/
                 binaryOf(newNode->data.InstructionCode + ARE_START, ARE_Immediate, ARE_SIZE);
                 break;
             default:
@@ -833,7 +833,7 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
                 } else 
                 {
                     binaryOf(currentNode->data.InstructionCode, nodeOut->data.place, ADDRESS_SIZE);
-                    strcpy(currentNode->data.InstructionCode + ARE_START, "00");/*need to check!! this can be also 10*/
+                    strcpy(currentNode->data.InstructionCode + ARE_START, "10");
                 }
             } else 
             {
