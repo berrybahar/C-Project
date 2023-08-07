@@ -52,7 +52,6 @@ typedef struct List
 } list;
 
 void binaryTo64(char binary[13], char *base64);
-error firstRun(char *);
 error strIsAlphaDigit(char *str);
 void reverseSTR(char str[], int);
 error clearWhiteSpace(char **line);

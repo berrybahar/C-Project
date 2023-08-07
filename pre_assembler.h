@@ -17,7 +17,6 @@ typedef struct ListMcr
     NodeMcr *head;
 } ListMcr;
 
-error preAssembler(char* fileName);
 char *concatenateStrings(char* str1, char* str2);
 void addToList(NodeMcr * newElement, ListMcr* list);
 struct NodeMcr * createNode(char * name, char* code);
