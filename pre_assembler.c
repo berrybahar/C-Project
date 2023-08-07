@@ -66,7 +66,7 @@ error isCommand(char *command)
         return success;
 }
 
-/* function free list and nodes, the function recived ListMcr * and NodeMcr** of the head of list*/
+/* function frees list and nodes, the function recieves ListMcr * and NodeMcr** of the head of list*/
 static error clearList (ListMcr *lst, NodeMcr **node) 
 {
     if (node && *node) 
@@ -87,7 +87,7 @@ static error clearList (ListMcr *lst, NodeMcr **node)
  * received NodeMcr* of the node to add and ListMcr* */
 void addToList(NodeMcr * newElement, ListMcr * list)
 {
-    if(list->head == NULL)
+    if(list->head == NULL)/*if the list is empty*/
     {
         list->head = newElement;
         list->count++;
@@ -136,13 +136,13 @@ error is_mcr_def( char **lineOut)
 {
     char *word;
     getToken(lineOut, &word, " ");
-    if (!word)
+    if (!word)/*if the word is NULL*/
         return emptyArg;
-    if (!strcmp(word, "mcro")) 
+    if (!strcmp(word, "mcro")) /*if there is a macro definition*/
     {
         free(word);
         return success;
-    } else 
+    } else /*there is no macro definition*/
     {
         free(word);
         return noMcr;
@@ -155,7 +155,7 @@ error is_mcrEnd(char *line)
 {
     char* linecpy;
     linecpy= removeWhiteSpace(line);
-    if(!strcmp(linecpy,"endmcro"))
+    if(!strcmp(linecpy,"endmcro"))/*if the line is the end of definition of the macro*/
     {
         return success;
     }
@@ -170,24 +170,31 @@ error is_name_of_mcr(char* line,ListMcr * mcrList)
     char* word;
     int i;
     NodeMcr * currentNode=mcrList->head;
-    if (mcrList->count==0)
+    if (mcrList->count==0)/*if the list is empty*/
         return noMcr;
     else 
     {
-        word=removeWhiteSpace(line);
+        word=removeWhiteSpace(line);/*removes the whitespaces in the file*/
 
-        for(i=0;i< mcrList->count;i++){
-            if(!strcmp(word,currentNode->data.name))
+        for(i=0;i< mcrList->count;i++){/*till the end of the macro list*/
+            if(!strcmp(word,currentNode->data.name))/*if the name is a macro name that's in the macro list*/
             {
                 return success;
             }
             currentNode=currentNode->next;
         }
     }
-    return noMcr;
+    return noMcr;/*the name is not a macro name*/
 }
 
-
+/**
+ * This function gets a file that has code in the assembly language.
+ * The file needs to be with the extension .as.
+ * It creates a file with the extension .am,
+ * and checks if the macro definitions in the file are legal,
+ * if it's legal it continues and spreads the macros inside of the file and returns success at the end.
+ * If it's illegal then the program stops and deletes the file with the extension .am and returns err.
+*/
 error preAssembler(char* fileName)
 {
     FILE *fpAm=NULL, *fileSrc=NULL;
@@ -198,64 +205,63 @@ error preAssembler(char* fileName)
 
     /*Building a linked list of macros*/
     ListMcr * mcrList = calloc(1,sizeof (ListMcr));
-    NodeMcr * newNode ;/*= (NodeMcr *) malloc(sizeof (NodeMcr));*/
+    NodeMcr * newNode ;
     checkAlloc(mcrList);
-    /*checkAlloc(newNode);*/
 
-    openFile(&fileSrc,fileName, ".as");
-    if(fileSrc==NULL) 
+    openFile(&fileSrc,fileName, ".as");/*opens the file with the extension .as*/
+    if(fileSrc==NULL) /*if there's file with the extension .as or that it does not exist*/
     {
         fprintf(stderr, "unable to open file %s, continuing to next file...", fileName);
         return fileOpeningErr;
     }
-    createFile(&fpAm,fileName,".am");
-    while (!feof(fileSrc))
+    createFile(&fpAm,fileName,".am");/*create file with the extension .am*/
+    while (!feof(fileSrc))/*while the file pointer does not points to the end of the file*/
     {
-        if( getOneLine(&line,fileSrc)== success)
+        if( getOneLine(&line,fileSrc)== success)/*get one line from the file*/
         {
             linecpy=(char *) malloc(sizeof (char)*LINE_MAX_LENGTH);
-            checkAlloc(linecpy);
-            strcpy(linecpy,line);
+            checkAlloc(linecpy);/*checks if the memory allocation can be made*/
+            strcpy(linecpy,line);/*copy the line from the file to linecpy*/
 
             /*checks name of macro */
-            if(!is_name_of_mcr(linecpy,mcrList))
+            if(!is_name_of_mcr(linecpy,mcrList))/*if there is macro name in the line*/
             {
                 NodeMcr * currentNode=mcrList->head;
                 linecpy= removeWhiteSpace(linecpy);
                 for(i=0;i< mcrList->count;i++){
-                    if(!strcmp(linecpy,currentNode->data.name)) 
+                    if(!strcmp(linecpy,currentNode->data.name))/*checks for the macro name in the macro list*/ 
                     {
-                        break;
+                        break;/*stops when it finds the macro in the macro list*/
                     }
                     currentNode = currentNode->next;
                 }
-                fputs(currentNode->data.code,fpAm);
-                fflush(fpAm);
+                fputs(currentNode->data.code,fpAm);/*puts the definition inside file with the extension .am*/
+                fflush(fpAm);/*flushes the file with the extension .am*/
                 freeString(&line);
                 freeString(&linecpy);
                 linecpy=NULL;
                 continue;
             }
-                /*checks definition of macro "mcr"*/
-            else if(!is_mcr_def(&linecpy))
+            /*checks definition of macro "mcro"*/
+            else if(!is_mcr_def(&linecpy))/*if there is a macro definition in  the line*/
             {
-                if(strIsAlphaDigit(linecpy)!=success)
+                if(strIsAlphaDigit(linecpy)!=success)/*if the first character of the new macro name is not a character in the alphabet*/
                 {/*definition of macro with characters */
-                    err = mcrNameIncorrect;
+                    err = mcrNameIncorrect;/*macro name isn't legal*/
                     removeWhiteSpace(line);
                     fprintf(stderr,"Error: The definition of the macro \"%s\" is incorrect\n",line);
                     continue;
                 }
                 getToken(&linecpy, &name, " ");
-                if(name)
+                if(name)/*if there is more than word in the macro definition*/
                 {/* definition of macro with space*/
-                    err = mcrNameIncorrect;
+                    err = mcrNameIncorrect;/*macro name isn't legal*/
                     removeWhiteSpace(line);
                     fprintf(stderr,"Error: The definition of the macro \"%s\" is incorrect\n",line);
                 }
                 name= realloc(name,sizeof(char )* strlen(linecpy)+1);
                 strcpy(name, linecpy);
-                if(isCommand(name)== success) 
+                if(isCommand(name)== success) /*if the macro name is not an opcode or an instruction*/
                 {/* definition of macro is not a command */
                     freeString(&line);
                     freeString(&linecpy);
@@ -263,22 +269,23 @@ error preAssembler(char* fileName)
                     codemcr = calloc(1, sizeof(char));
 
 
-                    /*copying code to the node of the list until "endmcr"*/
+                    /*copying code to the node of the list until "endmcro"*/
                     while ((is_mcrEnd(line)) != success) 
                     {
-                        codemcr = concatenateStrings(codemcr, line);
+                        codemcr = concatenateStrings(codemcr, line);/*get the line in the macro definition*/
                         getOneLine(&line, fileSrc);
                     }
-                    newNode = createNode(name, codemcr);
-                    addToList(newNode, mcrList);
+                    newNode = createNode(name, codemcr);/*put the macro definition inside the node of the macro name*/
+                    addToList(newNode, mcrList);/*add the new macro to the list*/
                     codemcr = NULL;
                     freeString(&line);
                     freeString(&name);
                 }
                 else 
                 {
-                    err = mcrNameIncorrect;
+                    err = mcrNameIncorrect;/*macro name is illegal*/
                     fprintf(stderr, "Error: The definition of a macro %s cannot be a name of command\n",name);
+                    /*free everyhting that has been allocated*/
                     freeString(&line);
                     freeString(&linecpy);
                     getOneLine(&line, fileSrc);
@@ -291,7 +298,7 @@ error preAssembler(char* fileName)
                     freeString(&name);
                 }
             }
-            else /*not macro definition or macro name*/
+            else /*if there is no makro definition in the line-*/
             {
                 fputs(line, fpAm);
                 fputs("\n",fpAm);
@@ -306,9 +313,9 @@ error preAssembler(char* fileName)
     fputs("\n",fpAm);
     fclose(fileSrc);
     fclose(fpAm);
-    if(err!=success)
+    if(err!=success)/*if there are errors inside the file*/
     {
-        removeFile(fileName,".am");
+        removeFile(fileName,".am");/*remove the file with the extension .am*/
         fprintf(stderr,"cannot create file %s.am\n",fileName);
     }
     clearList(mcrList,NULL);
@@ -330,11 +337,13 @@ char* concatenateStrings(char* str1, char* str2)
     char *result = malloc(len1 + len2 + 4);
 
     checkAlloc(result);
-    str2 = removeWhiteSpace(str2);
+    str2 = removeWhiteSpace(str2);/*remove the white spaces from the line*/
+    /*concetenate the strings*/
     strcpy(result, str1);
     strcat(result, "\t");
     strcat(result, str2);
     strcat(result, "\n");
+    /************************/
     freeString(&str1);
     freeString(&str2);
     return result;

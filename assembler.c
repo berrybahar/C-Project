@@ -39,6 +39,10 @@ void reverseSTR(char str[],int size)
     }
 }
 
+/**
+ * This function gets a string  of binary number with 12 bits 
+ * and changes the number to base 64 in the given char base64.
+*/
 void binaryTo64(char binary[13], char *base64)
 {   
     int i = 0, j = 0, temp = 0;
@@ -165,7 +169,7 @@ static error idLabel(char* arg)
     }
     if (!isalpha(arg[0])) 
     {
-        fprintf(stderr, "\tLabel must start with latter\n");
+        fprintf(stderr, "\tLabel must start with letter\n");
         return unknownArg;
     }
     if(strchr(arg,',')) 

@@ -1,8 +1,11 @@
 #include "main.h"
 
+/**
+ * frees the given string in the function
+*/
 void freeString(char **ptr) 
 {
-    if (*ptr) 
+    if (*ptr)/*if the string isn't NULL*/ 
     {
         free(*ptr);
         *ptr = NULL;
@@ -16,9 +19,9 @@ error strIsAlphaDigit(char* str)
 {
     int i;
 
-    for (i=0; str[i]!= '\0' ; i++) 
+    for (i=0; str[i]!= '\0' ; i++) /*till the end of the str*/
     {
-        if(!isalnum(str[i]))
+        if(!isalnum(str[i]))/*if the character in the i'th index inside the string is a number or it's a letter from the alphabet*/
         {
             return wrongDefLabel;
         }
@@ -35,20 +38,20 @@ char *removeWhiteSpace(char *str)
     char *result = str;
     for (i = 0; i < len; i++) 
     {
-        if (isspace(str[i]))
+        if (isspace(str[i]))/*if there is a space in the string*/
             result++;
-        else
+        else/*if there is no white space*/
             break;
     }
-    memmove(str, result, strlen(result) + 1);
-    return str;
+    memmove(str, result, strlen(result) + 1);/*removes the white spaces*/
+    return str;/*return the new line without the white spaces*/
 }
 
 /*This function takes in a void pointer as an argument and checks if the pointer is null.
  * If the pointer is null, it prints an error message and terminates the program.*/
 void checkAlloc(void *test) 
 {
-    if (!test) 
+    if (!test)/*if test is NULL*/
     {
         perror("Memory allocation error");
         exit(1);
@@ -59,12 +62,12 @@ void checkAlloc(void *test)
  * LAST ONE MUST BE NULL: freeMulti(&a,&b,&c,NULL);*/
 void freeMulti(void *ptr, ...) 
 {
-    void **nextPtr = ptr;
+    void **nextPtr = ptr;/*pointer for the arguments of the function*/
     va_list args;
     va_start(args, ptr);
-    while (nextPtr != NULL) 
+    while (nextPtr != NULL) /*while the list of the arguments are not NULL*/
     {
-        free(*nextPtr);
+        free(*nextPtr);/*free the argument*/
         *nextPtr = NULL;
         nextPtr = va_arg(args, void **);
     }
@@ -77,12 +80,12 @@ void freeMulti(void *ptr, ...)
 error openFile(FILE **filePointer, char *filePath, char *suffix) 
 {
     char *path = (char *) malloc(strlen(filePath) + strlen(suffix) + 1);
-    checkAlloc(path);
-    strcpy(path, filePath);
-    strcat(path, suffix);
-    *filePointer = fopen(path, "r");
+    checkAlloc(path);/*checks if the memory allocated successfully*/
+    strcpy(path, filePath);/*gets the name of the file*/
+    strcat(path, suffix);/*concetanes the name of the file with the extension of the file*/
+    *filePointer = fopen(path, "r");/*opens the file*/
     free(path);
-    if (!*filePointer) 
+    if (!*filePointer) /*if the file can not be oppened*/
     {
         perror("File opening error");
         return fileOpeningErr;
@@ -97,11 +100,11 @@ error createFile(FILE **filePointer, char *filePath, char *suffix)
 {
     char *path = (char *) malloc(strlen(filePath) + strlen(suffix) + 1);
     checkAlloc(path);
-    strcpy(path, filePath);
-    strcat(path, suffix);
-    *filePointer = fopen(path, "w");
+    strcpy(path, filePath);/*gets the name of the file*/
+    strcat(path, suffix);/*concetanes the name of the file with the extension of the file*/
+    *filePointer = fopen(path, "w"); /*creates the new file with the new extension*/
     free(path);
-    if (!*filePointer) 
+    if (!*filePointer) /*if the file can not be created*/
     {
         perror("File creating error");
         return fileOpeningErr;
@@ -117,11 +120,11 @@ error removeFile(char *filePath, char*suffix)
     char *path = (char *) malloc(strlen(filePath) + strlen(suffix) + 1);
     int status;
     checkAlloc(path);
-    strcpy(path, filePath);
-    strcat(path, suffix);
-    status = remove(path);
+    strcpy(path, filePath);/*gets the name of the file*/
+    strcat(path, suffix);/*concetanes the name of the file with the extension of the file*/
+    status = remove(path);/*remove the file*/
     free(path);
-    if (status != 0)
+    if (status != 0)/*if the file cannot be removed*/
         return removingErr;
     return success;
 }
@@ -131,22 +134,21 @@ error removeFile(char *filePath, char*suffix)
  * returns an error code represented as an error enum*/
 error closeFile(FILE *filePointer) 
 {
-    return ((fclose(filePointer) == EOF) ? fileClosingErr : success);
+    return ((fclose(filePointer) == EOF) ? fileClosingErr : success);/*close the file*/
 }
 
 /* '*str' and '*token' MUST be freed by the caller!
  * Function receives pointer to:
  * A source string (pointer to char *)
  * An empty Token string (pointer to char *) must be unallocated
- * A list of deliminators (string)
+ * A list of delimeters (string)
  * Function returns the first token found, and removes if from the source string
- * if none of the delim was found, source is unchanged,token will be NULL */
+ * if none of the delimeter was found, source is unchanged,token will be NULL */
 error getToken(char **str, char **token, char *delim) 
 {
     int i = 0;
     char *chAfterTok;
-    /*Check that all parameters are good*/
-    if (!str || !(*str) || !token) 
+    if (!str || !(*str) || !token) /*if one of the arguments is empty*/
     {
         if (token)
             *token = NULL;
@@ -157,10 +159,10 @@ error getToken(char **str, char **token, char *delim)
     /*Skip white spaces from the beginning of the string*/
     while (isspace((*str)[i]))
         i++;
-    /*if delim is null, copy entire string to token*/
+    /*if delimeter is null, copy entire string to token*/
     if (!delim) 
     {
-        if (strcmp(*str, "")) 
+        if (strcmp(*str, ""))/*if the string is empty*/ 
         {
             *token = (char *) malloc(strlen(*str + i) + 1);
             checkAlloc(token);
@@ -179,7 +181,7 @@ error getToken(char **str, char **token, char *delim)
         *token = NULL;
         return emptyArg;
     }
-    /*If deliminator is found. Else, deliminator wasn't found*/
+    /*If delimeter is found. Else, delimeter wasn't found*/
     if ((chAfterTok = strpbrk(*str + i, delim))) 
     {
         *(chAfterTok++) = '\0'; /*put '\0' then increase by one*/
@@ -203,17 +205,21 @@ error getToken(char **str, char **token, char *delim)
 error removeComments(char **str) 
 {
     char *ch;
-    if (str == NULL || *str == NULL)
+    if (str == NULL || *str == NULL)/*if the string is NULL*/
         return emptyArg;
-    ch = strpbrk(*str, ";");
-    if (!ch)
+    ch = strpbrk(*str, ";");/*checks if there is comment symbol ";" in the line*/
+    if (!ch)/*if there is no comment symbol*/
         return success;
+    /*else*/
     *ch = '\0';
     *str = (char *) realloc(*str, 1 + strlen(*str));
     checkAlloc(*str);
     return success;
 }
 
+/**
+ * enlarges the size of the given string 
+*/
 char *my_strdup(const char *s) 
 {
     size_t len = strlen(s) + 1; /* +1 for null terminator*/
@@ -234,11 +240,9 @@ error getOneLine(char **line_out, FILE *fp)
     while (1) 
     {
         char current = (char) fgetc(fp);
-        if (current == EOF || current == '\n') {
-            /*buffer[bytes_readen] = '\n';*/
+        if (current == EOF || current == '\n') {/*if current is the EOF value or if current is the new line character*/
             buffer[bytes_readen] = '\0';
             *line_out = my_strdup(buffer);
-            /*(*line_out) = strdup(buffer);*/
             free(buffer);
             return (current == EOF) ? endOfFile : success;
         }
@@ -249,7 +253,7 @@ error getOneLine(char **line_out, FILE *fp)
                 return memoryAllocErr;
             }
         }
-        else 
+        else
         {
             if(current == '\r')
                 buffer[bytes_readen++] = '\0';

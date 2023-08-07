@@ -1,16 +1,19 @@
 #include "main.h"
+/*Macro struct that gets the name of the macro and the definition of the macro*/
 typedef struct Mcr 
 {
     char *name;
     char *code;
 } Mcr;
 
+/*Node of macro*/
 typedef struct NodeMcr 
 {
     struct Mcr data;
     struct NodeMcr *next;
 } NodeMcr;
 
+/*linked list of macros*/
 typedef struct ListMcr 
 {
     int count;

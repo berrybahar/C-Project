@@ -66,8 +66,8 @@ typedef enum Opcode
 } opcode;
 
 /*Function header in main.c or funcLib.c only*/
-error preAssembler(char* fileName);/**/
-error firstRun(char *);/**/
+error preAssembler(char* fileName);
+error firstRun(char *);
 error openFile(FILE **filePointer, char *filePath, char *suffix);
 error createFile(FILE **filePointer, char *filePath, char *suffix);
 error removeFile(char *filePath, char*suffix);
