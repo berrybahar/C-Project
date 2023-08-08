@@ -786,11 +786,6 @@ error firstRun (char *path)
                     freeMulti(&label, NULL);
                 }
                 errFlag = codeLabel(commandOP, line, &labelList);
-                /*********************comment*******************************/
-                /*printf("\n");*/
-                /*printList(&labelList, NULL);*/
-                /*printf("\n");*/
-                /***********************************************************/
                 break;
             default:
                 errFlag = codeCommand(line, &instructionList, commandOP, &IC);
@@ -821,11 +816,11 @@ error firstRun (char *path)
     closeFile(stream);
 
 /********************in commend************************/
-   /* printList(&instructionList, NULL);*/
-   /* printf("\n");*/
-   /* printList(&dataList, NULL);*/
-   /* printf("\n");*/
-   /* printList(&labelList, NULL);*/
+    /*printList(&instructionList, NULL);
+    printf("\n");
+    printList(&dataList, NULL);
+    printf("\n");
+    printList(&labelList, NULL);*/
 /******************************************************/
 
 
@@ -861,7 +856,7 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
                 if (nodeOut->data.type == external) 
                 {
                     cntExt++;
-                    binaryOf(currentNode->data.InstructionCode, 0, ADDRESS_SIZE);
+                    binaryOf(currentNode->data.InstructionCode, nodeOut->data.place, ADDRESS_SIZE);
                     strcpy(currentNode->data.InstructionCode + ARE_START, "01");
                 } else if (nodeOut->data.type == entry) 
                 {

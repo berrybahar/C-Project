@@ -42,7 +42,6 @@ K:  .data 22
 M: .data -5
 .extern L2
 L2: .data 3
-.entry L3
 .entry M
 .entry K
 .entry LENGTH
@@ -52,3 +51,5 @@ L2: .data 3
 .entry LOOP
 .entry MAIN
 L3: .data -5
+.entry L3
+
