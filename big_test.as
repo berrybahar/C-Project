@@ -43,4 +43,12 @@ M: .data -5
 .extern L2
 L2: .data 3
 .entry L3
+.entry M
+.entry K
+.entry LENGTH
+.entry STR
+.entry END
+.entry L1
+.entry LOOP
+.entry MAIN
 L3: .data -5

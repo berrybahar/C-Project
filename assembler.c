@@ -810,7 +810,7 @@ error firstRun (char *path)
     while (node) 
     {
         if ((node->data.type == data || node->data.type == string || node->data.type == entry ||
-            node->data.type == external) && (node->data.place<=100))
+            node->data.type == external) && (node->data.place<100))
             node->data.place += IC;
         node = node->next;
     }
