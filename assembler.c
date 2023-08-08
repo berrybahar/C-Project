@@ -483,8 +483,6 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
         clearWhiteSpace(&label);
         strcpy(newNode->data.name, label);
         addToList(instructionList, &newNode);
-        /*am1 = prm1;
-        am2 = prm2;*/
     }
 
     if (arg1) 
@@ -621,6 +619,7 @@ error codeLabel (opcode type, char* line , list* labelList)
         {
             if ((err = searchNode(labelList, label, &node)) == success) 
             {
+                /*adding of L2 is here*/
                 newNode = createNodeFirstRun(label, type, -1, "");
                 addToList(labelList, &newNode);
                 freeMulti(&label, &line, &newNode, NULL);
@@ -629,8 +628,9 @@ error codeLabel (opcode type, char* line , list* labelList)
             {
                 if (node->data.type != type) {
                     /*fixes label "place" problem:*/
-                    if (node->data.type != entry && node->data.type != external)
+                    if (node->data.type != entry && node->data.type != external){
                         node->data.type = type;
+                    }
                     else 
                     {
                         newNode = createNodeFirstRun(label, type, -1, "");
@@ -640,7 +640,7 @@ error codeLabel (opcode type, char* line , list* labelList)
                     return success;
                 } else 
                 {
-                    fprintf(stderr, "\tError: The definition of label %s is already exists\n", node->data.name);
+                    fprintf(stderr, "\t            Error: The definition of label %s is already exists\n", node->data.name);
                     freeMulti(&label, &line, &newNode, NULL);
                     return labelExists;
                 }
@@ -687,6 +687,10 @@ error setLabelAddress ( list *lst, char* name,int address, opcode op)
             relevantNode = temp;
         } else if (relevantNode->data.place != -1)
             return labelExists;
+        else
+        {
+            relevantNode->data.place = address;
+        }
         relevantNode->data.place = address;
         return success;
     }
@@ -723,7 +727,7 @@ error idArg(char **arg, addressMethod *amArg)
  * The function returns an error flag indicating success or failure.*/
 error firstRun (char *path) 
 {
-    Node *node;
+    Node *node, *temp;
     FILE *stream;
     error errForSecond = success, errFlag = success;
     opcode commandOP;
@@ -746,11 +750,11 @@ error firstRun (char *path)
         }
         printf("%s\n", line);
         getToken(&line, &label, ":"); /*Get label if exists*/
-                /*********************comment*******************************/
-                /*printf("\n");*/
-                /*printList(&labelList, NULL);*/
-                /*printf("\n");*/
-                /***********************************************************/
+        /*********************comment*******************************/
+        /*printf("\n");*/
+        /*printList(&labelList, NULL);*/
+        /*printf("\n");*/
+        /***********************************************************/
         getToken(&line, &word, " \t\n"); /*Get first word of line*/
         if (!word)
             getToken(&line, &word, NULL);
@@ -765,7 +769,17 @@ error firstRun (char *path)
             errFlag = setLabelAddress(&labelList, label, (commandOP == data || commandOP == string ? DC : IC),commandOP);
             if (errFlag != success)
                 errForSecond = errFlag;
+        } 
+        /***************for external definition after label definition*************************************/
+        if(label != NULL)
+            searchNode(&labelList, label, &temp);
+        if((label && temp) && (temp->data.type == external))
+        {
+            fprintf(stderr, "\tError: The definition of label %s is already exists\n", label);
+            errForSecond = wrongDefLabel;
         }
+        /************************************************************/
+        
         switch (commandOP) 
         {
             case none:
@@ -805,7 +819,7 @@ error firstRun (char *path)
     while (node) 
     {
         if ((node->data.type == data || node->data.type == string || node->data.type == entry ||
-            node->data.type == external) && (node->data.place<100))
+            node->data.type == external) && (node->data.place < 100))
             node->data.place += IC;
         node = node->next;
     }
@@ -815,7 +829,7 @@ error firstRun (char *path)
         fprintf(stderr,"Error(s) were found in your code, cannot assemble.\n");
     closeFile(stream);
 
-/********************in commend************************/
+/********************in comment************************/
     /*printList(&instructionList, NULL);
     printf("\n");
     printList(&dataList, NULL);
@@ -856,7 +870,7 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
                 if (nodeOut->data.type == external) 
                 {
                     cntExt++;
-                    binaryOf(currentNode->data.InstructionCode, nodeOut->data.place, ADDRESS_SIZE);
+                    binaryOf(currentNode->data.InstructionCode, 0, ADDRESS_SIZE);
                     strcpy(currentNode->data.InstructionCode + ARE_START, "01");
                 } else if (nodeOut->data.type == entry) 
                 {

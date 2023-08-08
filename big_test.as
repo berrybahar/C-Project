@@ -1,4 +1,5 @@
-MAIN: mov @r3, LENGTH
+MAIN: mov+
+ @r3, LENGTH
 LOOP: jmp L1
     prn -5
     bne LOOP
@@ -50,6 +51,6 @@ L2: .data 3
 .entry L1
 .entry LOOP
 .entry MAIN
-L3: .data -5
+;L3: .data -5
 .entry L3
 
