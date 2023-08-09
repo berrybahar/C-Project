@@ -155,7 +155,8 @@ struct Node* createNodeFirstRun(char * name, opcode opcode, int place, char* ins
 
 /*Function verifies and identifies the label*/
 static error idLabel(char* arg) 
-{
+{   
+    int i = 1;   
     if (strlen(arg) >= LABEL_MAX_SIZE) 
     {
         fprintf(stderr, "\tLabel too long\n");
@@ -176,6 +177,15 @@ static error idLabel(char* arg)
     {
         fprintf(stderr, "\tLabel or arg cannot contain \',\',\n");
         return unknownArg;
+    }
+    while(i < strlen(arg))
+    {
+        if(!isalpha(arg[i]) && !isdigit(arg[i]))
+        {
+            fprintf(stderr, "\tLabel cannot contain non-digits or non-letters\n");
+            return unknownArg;
+        }
+        i++;
     }
     return success;
 }
@@ -426,7 +436,9 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
             idArg(&arg2, &am2);
             if ((command == lea && am1 != direct) || am2 == immediate) 
             {
-                fprintf(stderr, "\tCommand has a wrong type of argument\n");
+                if(command == cmp)
+                    break;
+                fprintf(stderr, "\tCommand has a wrong type of argument1\n");
                 return wrongArg;
             }
             break;
@@ -830,11 +842,11 @@ error firstRun (char *path)
     closeFile(stream);
 
 /********************in comment************************/
-    /*printList(&instructionList, NULL);
+    printList(&instructionList, NULL);
     printf("\n");
     printList(&dataList, NULL);
     printf("\n");
-    printList(&labelList, NULL);*/
+    printList(&labelList, NULL);
 /******************************************************/
 
 
@@ -844,7 +856,6 @@ error firstRun (char *path)
     clearList(&dataList, NULL);
     return errFlag;
 }
-
 /*The function performs a second run, it received lists of labels,
  * instructions code and data, pointer of string of file name, and error flag
  * the function complete all information and if there is not an error creates file of obj
