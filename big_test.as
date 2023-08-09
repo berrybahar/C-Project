@@ -1,5 +1,4 @@
-MAIN: mov+
- @r3, LENGTH
+MAIN: mov @r3, LENGTH
 LOOP: jmp L1
     prn -5
     bne LOOP
@@ -41,8 +40,8 @@ STR: .string "abcdef"
 LENGTH: .data 6,-9,15
 K:  .data 22
 M: .data -5
-.extern L2
 L2: .data 3
+.extern L2
 .entry M
 .entry K
 .entry LENGTH
@@ -51,6 +50,6 @@ L2: .data 3
 .entry L1
 .entry LOOP
 .entry MAIN
-;L3: .data -5
+L3: .data -5
 .entry L3
 
