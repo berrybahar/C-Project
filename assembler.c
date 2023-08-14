@@ -631,17 +631,24 @@ error codeLabel (opcode type, char* line , list* labelList)
         {
             if ((err = searchNode(labelList, label, &node)) == success) 
             {
-                /*adding of L2 is here*/
                 newNode = createNodeFirstRun(label, type, -1, "");
                 addToList(labelList, &newNode);
                 freeMulti(&label, &line, &newNode, NULL);
                 return success;
-            } else if (err == labelExists) 
+            } 
+            else if (err == labelExists) 
             {
-                if (node->data.type != type) {
+                if (node->data.type != type)
+                 {
                     /*fixes label "place" problem:*/
-                    if (node->data.type != entry && node->data.type != external){
-                        node->data.type = type;
+                    if (node->data.type != entry && node->data.type != external)
+					{
+						if(type == external)
+						{
+							fprintf(stderr, "\t            Error: The definition of label %s already exists\n", node->data.name);
+                    		freeMulti(&label, &line, &newNode, NULL);
+                    		return labelExists;
+						} else node->data.type = type;
                     }
                     else 
                     {
@@ -650,9 +657,10 @@ error codeLabel (opcode type, char* line , list* labelList)
                     }
                     freeMulti(&label, &line, &newNode, NULL);
                     return success;
-                } else 
+                } 
+                else 
                 {
-                    fprintf(stderr, "\t            Error: The definition of label %s is already exists\n", node->data.name);
+                    fprintf(stderr, "\t            Error: The definition of label %s already exists\n", node->data.name);
                     freeMulti(&label, &line, &newNode, NULL);
                     return labelExists;
                 }
@@ -762,11 +770,6 @@ error firstRun (char *path)
         }
         printf("%s\n", line);
         getToken(&line, &label, ":"); /*Get label if exists*/
-        /*********************comment*******************************/
-        /*printf("\n");*/
-        /*printList(&labelList, NULL);*/
-        /*printf("\n");*/
-        /***********************************************************/
         getToken(&line, &word, " \t\n"); /*Get first word of line*/
         if (!word)
             getToken(&line, &word, NULL);
@@ -782,16 +785,15 @@ error firstRun (char *path)
             if (errFlag != success)
                 errForSecond = errFlag;
         } 
-        /***************for external definition after label definition*************************************/
+        /***************for label definition after external definition*************************************/
         if(label != NULL)
             searchNode(&labelList, label, &temp);
         if((label && temp) && (temp->data.type == external))
         {
-            fprintf(stderr, "\tError: The definition of label %s is already exists\n", label);
+            fprintf(stderr, "\tError: The definition of label %s already exists\n", label);
             errForSecond = wrongDefLabel;
         }
-        /************************************************************/
-        
+        /*************************************************************************************************/
         switch (commandOP) 
         {
             case none:
@@ -842,11 +844,11 @@ error firstRun (char *path)
     closeFile(stream);
 
 /********************in comment************************/
-    printList(&instructionList, NULL);
+    /*printList(&instructionList, NULL);
     printf("\n");
     printList(&dataList, NULL);
     printf("\n");
-    printList(&labelList, NULL);
+    printList(&labelList, NULL);*/
 /******************************************************/
 
 
@@ -904,7 +906,7 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
     /*There were no errors*/
     if (errFlag == success) 
     {
-        createFile(&fpObj, fileName, ".obj");
+        createFile(&fpObj, fileName, ".ob");
         /*write the instruction codes into new file ".obj"*/
         currentNode = instructionList->head;
         fprintf(fpObj,"%d   %d\n",IC,DC);
@@ -970,11 +972,11 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
     }
     else 
     {
-        fprintf(stderr, "Errors founds, cannot create file %s.obj\n", fileName);
+        fprintf(stderr, "Errors founds, cannot create file %s.ob\n", fileName);
         return success;
     }
     free(base64);
     fprintf(stderr,"second run executed successfully.\n" );
-    fprintf(stderr, "file %s.obj created successfully.\n", fileName);
+    fprintf(stderr, "file %s.ob created successfully.\n", fileName);
     return success;
 }
