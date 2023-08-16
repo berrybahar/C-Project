@@ -311,7 +311,7 @@ error codeString(char *line, list *dataList, int *counter)
     while (ch != '\0' && ch != '\"')
     {
         printf("%c\n", ch);
-        if(isalpha(ch))/**/
+        if(isalpha(ch))
         {
             printf("%c\n", ch);
             free(line);
@@ -378,10 +378,9 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
     checkAlloc(newNode);
     switch (command) 
     {
-        case jmp:/*you need to change theese because it's different*/
+        case jmp:
         case bne:
         case jsr:
-            /*getToken(&line, &label, "(");*/
             am1 = 0;
             if (!label) 
             {
@@ -395,8 +394,6 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
                 arg1 = NULL;
             } else 
             {
-               /* getToken(&line, &arg1, ",");*/
-                /*getToken(&line, &arg2, ")");*/
                 clearWhiteSpace(&line);
                 if (line) 
                 {
@@ -409,13 +406,8 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
                 fprintf(stderr, "\tCommand is missing arguments\n");
                 return missingArg;
             }
-            /*if (am2 != direct && am2 != jumpWP) 
-            {
-                fprintf(stderr, "\tCommand has a wrong type of argument\n");
-                return wrongArg;
-            }*/
             break;
-        case mov:/*theese cases are seemingly correct*/
+        case mov:
         case add:
         case sub:
         case lea:
@@ -442,7 +434,7 @@ error codeCommand (char *line, list *instructionList, opcode command, int *count
                 return wrongArg;
             }
             break;
-        case not:/*there are changes in these cases*/
+        case not:
         case clr:
         case inc:
         case dec:
@@ -843,14 +835,6 @@ error firstRun (char *path)
         fprintf(stderr,"Error(s) were found in your code, cannot assemble.\n");
     closeFile(stream);
 
-/********************in comment************************/
-    /*printList(&instructionList, NULL);
-    printf("\n");
-    printList(&dataList, NULL);
-    printf("\n");
-    printList(&labelList, NULL);*/
-/******************************************************/
-
 
     secondRun(&dataList, &labelList, &instructionList, path, errForSecond,IC-100,DC);
     clearList(&instructionList, NULL);
@@ -858,6 +842,7 @@ error firstRun (char *path)
     clearList(&dataList, NULL);
     return errFlag;
 }
+
 /*The function performs a second run, it received lists of labels,
  * instructions code and data, pointer of string of file name, and error flag
  * the function complete all information and if there is not an error creates file of obj
@@ -907,7 +892,7 @@ error secondRun(list* dataList, list* labelList, list* instructionList,char* fil
     if (errFlag == success) 
     {
         createFile(&fpObj, fileName, ".ob");
-        /*write the instruction codes into new file ".obj"*/
+        /*write the instruction codes into new file ".ob"*/
         currentNode = instructionList->head;
         fprintf(fpObj,"%d   %d\n",IC,DC);
         for (i = 0; i < instructionList->count; i++) 

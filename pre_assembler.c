@@ -313,7 +313,7 @@ error preAssembler(char* fileName)
     fputs("\n",fpAm);
     fclose(fileSrc);
     fclose(fpAm);
-    if(err!=success)/*if there are errors inside the file*/
+    if(err!=success )/*if there are errors inside the file*/
     {
         removeFile(fileName,".am");/*remove the file with the extension .am*/
         fprintf(stderr,"cannot create file %s.am\n",fileName);
