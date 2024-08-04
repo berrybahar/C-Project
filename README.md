@@ -1,2 +1,2 @@
-# C-Project
-Assembler of Liran Trachter and Beri Bahar
+# C-Project-Assembler
+Description in description(ממן 14).pdf
